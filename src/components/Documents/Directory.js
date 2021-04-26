@@ -150,15 +150,21 @@ function Directory() {
                     }
                 });
                 arr.forEach(r => {
-                    if(r.parentId != null & r.parentId != "") {
-                        arr.forEach(d => {
-                            if(d.id == r.parentId) {
-                                let ds = {id: d.id, docType: d.docType, docStructure: d.docStructure, version: d.version, parentId: d.parentId, deepestNode: d.deepestNode};
+                    if(r.parentId != null && r.parentId != "") {
+                        arr.forEach((d, idx) => {
+                            if(d.id == r.parentId && d.parentId == null || d.parentId == "") {
+                                let ds = {id: d.id, docType: d.docType, docStructure: d.docStructure, version: d.version, parentId: d.parentId, deepestNode: d.deepestNode}; // parent
+                                let nextDs = {id: r.id, docType: r.docType, docStructure: r.docStructure, version: r.version, parentId: r.parentId, deepestNode: r.deepestNode}; // child
+                                const dataArr = Array.from(data);
+                                dataArr[idx] = {ds: ds, next: {ds: nextDs, next: null}}
+                                setData(dataArr);
+                            } else {
+                                /*let ds = {id: d.id, docType: d.docType, docStructure: d.docStructure, version: d.version, parentId: d.parentId, deepestNode: d.deepestNode};
                                 let nextDs = {id: r.id, docType: r.docType, docStructure: r.docStructure, version: r.version, parentId: r.parentId, deepestNode: r.deepestNode};
                                 setData(data => [...data, {
                                     ds: ds,
                                     next: {ds: nextDs, next: null}
-                               }]);        
+                                }]);*/
                             }
                         });
                     }
@@ -175,9 +181,8 @@ function Directory() {
             {
                 <div className="navbar">
                     {data.map(d => {
-                        console.log("id: " + d.ds.id)
                         if(d.next != null) {
-
+                            console.log("id: " + d.ds.id + ", next id: " + d.next.ds.id)
                         }
                         //return <a href="#" key={d.ds.id}>id: {d.ds.id}</a>
                     })}
