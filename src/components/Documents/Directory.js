@@ -16,6 +16,52 @@ function Directory() {
     const { token, setToken } = useToken();
     const [data, setData] = useState([]);
 
+    function build_chain(r, m, arr) {
+        var BreakException = {};
+        try {
+            arr.forEach(d => {
+                if(r.parentId === "") {
+                    m.push(r);
+                    throw BreakException;
+                }
+                if(r.parentId === d.id) {
+                    m.push(r);
+                    build_chain(d, m, arr);
+                    throw BreakException;
+                }
+            })
+        } catch(e) {
+            if (e!==BreakException) throw e;
+        }
+        return m;
+    }
+
+    var objects = [];
+    function recursive(r, m) {
+        var one = [];
+        for(const[k,v] of Object.entries(r)) {            
+            if (typeof v == 'object') {
+                objects.push(k);
+                recursive(v, m)
+            } else {
+                var dd = {};
+                dd[k] = v;
+                if(objects.length > 0) {
+                    one.push(dd);
+                } else {
+                    m.push(dd);
+                }
+            }
+        }
+        if(objects.length > 0) {
+            var dd = {};
+            var val = objects.pop();
+            dd[val] = one;
+            m.push(dd);
+        }
+        return m
+    }
+
     async function Comp() {
         return await returnAllDocTypes({
             token
@@ -29,7 +75,7 @@ function Directory() {
                 {
                     id: "076b114a-0e8e-4995-a18e-201521fdedc1",
                     docType: "string",
-                    docStructure: {},
+                    docStructure: {"iin":"required"},
                     version: "string",
                     parentId: "",
                     deepestNode: true
@@ -37,7 +83,7 @@ function Directory() {
                 {
                     id: "bb2501e5-ef16-4982-b06c-f84882b5fb3e",
                     docType: "string",
-                    docStructure: {},
+                    docStructure: {"iin": "required", "person": {"name": "required"}},
                     version: "string",
                     parentId: "",
                     deepestNode: true
@@ -53,7 +99,7 @@ function Directory() {
                 {
                     id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
                     docType: "string",
-                    docStructure: {},
+                    docStructure: {"iin": "", "good": "required", "person": {"name": "required"}},
                     version: "string",
                     parentId: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
                     deepestNode: true
@@ -77,7 +123,7 @@ function Directory() {
                 {
                     id: "400e49be-a639-11eb-bcbc-0242ac130002",
                     docType: "string",
-                    docStructure: {},
+                    docStructure: {"iin": "required", "good": "", "person": {"name": "required"}},
                     version: "string",
                     parentId: "076b114a-0e8e-4995-a18e-201521fdedc1",
                     deepestNode: true
@@ -93,7 +139,7 @@ function Directory() {
                 {
                     id: "772b18b4-a639-11eb-bcbc-0242ac130002",
                     docType: "string",
-                    docStructure: {},
+                    docStructure: {"ip": "required", "type": "required", "terms": {"id": "required", "scope": "required", "partner": {"id": "required", "title": "required", "externalId": "required"}, "version": "required", "activity": "required", "beginDate": "required", "documentID": "required", "publickLink": "required", "termVersionID": "required"}, "customer": {"id": "required", "iin": "required", "phone": "required", "surname": "required", "firstname": "required", "externalId": "required"}, "location": "required", "beginDate": "required", "initiator": {"ip": "required", "system": "required", "userName": "required", "userSurname": "required", "userExternalId": "required"}, "expirationDate": "required", "revocationDate": "required"},
                     version: "string",
                     parentId: "30c92410-a639-11eb-bcbc-0242ac130002",
                     deepestNode: true
@@ -109,7 +155,7 @@ function Directory() {
                 {
                     id: "8512f370-a639-11eb-bcbc-0242ac130002",
                     docType: "string",
-                    docStructure: {},
+                    docStructure: {"ip": "required", "type": "required", "terms": {"id": "required", "scope": "required", "partner": {"id": "required", "title": "required", "externalId": "required"}, "version": "required", "activity": "required", "beginDate": "required", "documentID": "required", "publickLink": "required", "termVersionID": "required"}, "customer": {"id": "required", "iin": "required", "phone": "required", "surname": "required", "firstname": "required", "externalId": "required"}, "location": "required", "beginDate": "required", "initiator": {"ip": "required", "system": "required", "userName": "required", "userSurname": "required", "userExternalId": "required"}, "expirationDate": "required", "revocationDate": "required"},
                     version: "string",
                     parentId: "",
                     deepestNode: true
@@ -140,35 +186,31 @@ function Directory() {
                 }
             ]
             if (arr.length > 0) {
+                var chain_of_nodes = [];
+                var m = [];
                 arr.forEach(r => {
-                    if(r.parentId == null || r.parentId == "") {
-                        let ds = {id: r.id, docType: r.docType, docStructure: r.docStructure, version: r.version, parentId: r.parentId, deepestNode: r.deepestNode};
-                        setData(data => [...data, {
-                            ds: ds,
-                            next: null
-                        }]);
+                    if(r.parentId != "" && r.parentId != null) {
+                        var m = [];
+                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, arr))));
+                        m = [];
                     }
-                });
-                arr.forEach(r => {
-                    if(r.parentId != null && r.parentId != "") {
-                        arr.forEach((d, idx) => {
-                            if(d.id == r.parentId && d.parentId == null || d.parentId == "") {
-                                let ds = {id: d.id, docType: d.docType, docStructure: d.docStructure, version: d.version, parentId: d.parentId, deepestNode: d.deepestNode}; // parent
-                                let nextDs = {id: r.id, docType: r.docType, docStructure: r.docStructure, version: r.version, parentId: r.parentId, deepestNode: r.deepestNode}; // child
-                                const dataArr = Array.from(data);
-                                dataArr[idx] = {ds: ds, next: {ds: nextDs, next: null}}
-                                setData(dataArr);
-                            } else {
-                                /*let ds = {id: d.id, docType: d.docType, docStructure: d.docStructure, version: d.version, parentId: d.parentId, deepestNode: d.deepestNode};
-                                let nextDs = {id: r.id, docType: r.docType, docStructure: r.docStructure, version: r.version, parentId: r.parentId, deepestNode: r.deepestNode};
-                                setData(data => [...data, {
-                                    ds: ds,
-                                    next: {ds: nextDs, next: null}
-                                }]);*/
+                })
+
+                if(chain_of_nodes.length > 0) {
+                    var chainData = []
+                    chain_of_nodes.forEach(node => {
+                        var chainNode = []
+                        node.forEach(n => {
+                            if(!(Object.entries(n.docStructure).length === 0)) {
+                                m = Array.from(new Set(recursive(n.docStructure, m)));    
                             }
-                        });
-                    }
-                });
+                            chainNode.push({id: n.id, docType: n.docType, docStructure: m, version: n.version, parentId: n.parentId, deepestNode: n.deepestNode});
+                            m = [];
+                        })
+                        chainData.push(chainNode)
+                    })
+                    setData(chainData);
+                }
             }
         });
     }, []);
@@ -178,35 +220,32 @@ function Directory() {
             <div>
                 <h2>Doctypes</h2>
             </div>
-            {
-                <div className="navbar">
-                    {data.map(d => {
-                        if(d.next != null) {
-                            console.log("id: " + d.ds.id + ", next id: " + d.next.ds.id)
-                        }
-                        //return <a href="#" key={d.ds.id}>id: {d.ds.id}</a>
-                    })}
-                    {/* if (d.parentId == null || d.parentId == "") {
-                        return <a href="#" key={d.id}>id: {d.id}</a>
-                    } */}
-                    {/* Displays only elements with parent id */}
-                    {/* {data.map((d => {
-                        data.map((z, index) => {
-                            if(z.parentId == d.parentId) {
-                                
-                                <div className="dropdown">
-                                    <button className="dropbtn" key={z.id}>{z.id}
-                                        <i className="fa fa-caret-down"></i>
-                                    </button>
-                                    <div className="dropdown-content">
-                                        <a href=""></a>
-                                    </div>
-                                </div>
-                            }
-                        });
-                    }))} */}
-                </div>
-            }
+            <div>
+                {data.map(d => (
+                    <div className="container-chain">
+                        {d.map((key, i) => (
+                            <div className="container-chain-form-block">
+                                <h1>{key.id}</h1>
+                                <form className="container-form">
+                                    {key.docStructure.map(obj => (
+                                        typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
+                                            <div className="container-form-content">
+                                                {isNaN(k) && <h1>{k}</h1>}:<br/>
+                                            </div>                                 
+                                        )) : Object.keys(obj).map(k => (
+                                            <div className="container-form-content">
+                                                {isNaN(k) && k}: &nbsp;
+                                                {isNaN(k) && obj[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
+                                            </div>
+                                        ))
+                                    ))}
+                                    <input className="submit" type="submit" value="Submit"/><br/><br/>
+                                </form>
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 }
