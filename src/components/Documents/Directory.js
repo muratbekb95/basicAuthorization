@@ -1,6 +1,7 @@
 import React, { useEffect, useState, createRef } from 'react';
 import useToken from '../../useToken';
 import '../../static/css/Menu.css';
+import _ from 'lodash';
 
 async function returnAllDocTypes(credentials) {
     return fetch('http://localhost:5053/document-types/root/all', {
@@ -188,6 +189,8 @@ function Directory() {
             if (arr.length > 0) {
                 var chain_of_nodes = [];
                 var m = [];
+
+                // construct the array of chain of nodes according to parenthood
                 arr.forEach(r => {
                     if(r.parentId != "" && r.parentId != null) {
                         var m = [];
@@ -196,9 +199,35 @@ function Directory() {
                     }
                 })
 
-                if(chain_of_nodes.length > 0) {
+                // sort according to length
+                var sorted_chain_of_nodes = [].concat(chain_of_nodes);
+                sorted_chain_of_nodes.sort((a, b) => a.length < b.length ? 1 : -1)
+
+                // remove duplicates in array
+                sorted_chain_of_nodes.forEach((ch, elem) => {
+                    sorted_chain_of_nodes.forEach((ch1, i) => {
+                        if(ch.length > ch1.length) {
+                            let size = ch1.length;
+                            var equals = true;
+                            
+                            let subChain = ch.slice(ch.length - size, size+1);
+                            subChain.forEach((sch, idx) => {
+                                if(_.isEqual(sch, ch1[idx]) === false) {
+                                    equals = false;
+                                }
+                            })
+
+                            if(equals) {
+                                sorted_chain_of_nodes = sorted_chain_of_nodes.filter(x=> x != ch1);
+                            }
+                        }
+                    })
+                })
+
+                // construct array which is suitable to build forms based on final refactored array
+                if(sorted_chain_of_nodes.length > 0) {
                     var chainData = []
-                    chain_of_nodes.forEach(node => {
+                    sorted_chain_of_nodes.forEach(node => {
                         var chainNode = []
                         node.forEach(n => {
                             if(!(Object.entries(n.docStructure).length === 0)) {
