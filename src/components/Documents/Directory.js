@@ -2,6 +2,8 @@ import React, { useEffect, useState, createRef } from 'react';
 import useToken from '../../useToken';
 import '../../static/css/Menu.css';
 import _ from 'lodash';
+import Collapse from "@kunukn/react-collapse";
+import cx from "classnames";
 
 async function returnAllDocTypes(credentials) {
     return fetch('http://localhost:5053/document-types/root/all', {
@@ -16,6 +18,7 @@ async function returnAllDocTypes(credentials) {
 function Directory() {
     const { token, setToken } = useToken();
     const [data, setData] = useState([]);
+    const [collapse, setCollapse] = useState([]);
 
     function build_chain(r, m, arr) {
         var BreakException = {};
@@ -240,38 +243,77 @@ function Directory() {
                     })
                     setData(chainData);
                 }
+
+                var collapseArr = [];
+                sorted_chain_of_nodes.forEach(sch => {
+                    collapseArr.push({isOpen: false});
+                })
+                setCollapse(collapseArr);
             }
         });
     }, []);
+
+    function toggle(index) {
+        let collapseArr = {...collapse};
+        let collapseItem = {...collapse[index]};
+        collapseItem.isOpen = !collapseItem.isOpen;
+        collapseArr[index] = collapseItem;
+        setCollapse(collapseArr)
+    }
 
     return (
         <div className="container">
             <div>
                 <h2>Doctypes</h2>
             </div>
-            <div>
-                {data.map(d => (
-                    <div className="container-chain">
-                        {d.map((key, i) => (
-                            <div className="container-chain-form-block">
-                                <h1>{key.id}</h1>
-                                <form className="container-form">
-                                    {key.docStructure.map(obj => (
-                                        typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
-                                            <div className="container-form-content">
-                                                {isNaN(k) && <h1>{k}</h1>}:<br/>
-                                            </div>                                 
-                                        )) : Object.keys(obj).map(k => (
-                                            <div className="container-form-content">
-                                                {isNaN(k) && k}: &nbsp;
-                                                {isNaN(k) && obj[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
-                                            </div>
-                                        ))
-                                    ))}
-                                    <input className="submit" type="submit" value="Submit"/><br/><br/>
-                                </form>
+            <div className="app">
+                {data.map((d, idx) => (
+                    <div className="wrap-container">
+                        {console.log(d)}
+                        <button
+                            className={cx("app__toggle", {
+                                "app__toggle--active": collapse[idx]
+                            })}
+                            onClick={() => toggle(idx)}
+                            >
+                            <span className="app__toggle-text">Category {idx+1}</span>
+                            <div className="rotate90">
+                                <svg
+                                className={cx("icon", { "icon--expanded": collapse[idx] })}
+                                viewBox="6 0 12 24"
+                                >
+                                <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
+                                </svg>
                             </div>
-                        ))}
+                        </button>
+                        <Collapse isOpen={{...collapse[idx]}.isOpen} className={"app__collapse app__collapse--gradient " +
+                        (collapse[idx] ? "app__collapse--active" : "")}>
+                            <div className="app__content">
+                                {d.map(key => (
+                                        <div class="wrap-form">
+                                            <h5>{key.id}</h5>
+                                            <form className="container-form">
+                                                {key.docStructure.map(obj => (
+                                                    typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
+                                                        <div className="container-form-content">
+                                                            {isNaN(k) && <h6>{k}</h6>}:<br/>
+                                                        </div>                                 
+                                                    )) : Object.keys(obj).map(k => (
+                                                        <div className="container-form-subcontent">
+                                                            {isNaN(k) && <h6>{k}</h6>}: &nbsp;
+                                                            {isNaN(k) && obj[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
+                                                        </div>
+                                                    ))
+                                                ))}
+                                                <input className="submit" type="submit" value="Submit"/><br/><br/>
+                                            </form>
+                                        </div>
+                                ))}
+                                <button onClick={() => toggle(idx)} className="app__button">
+                                    close
+                                </button>
+                            </div>
+                        </Collapse>
                     </div>
                 ))}
             </div>
