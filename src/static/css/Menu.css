@@ -63,17 +63,21 @@ body {
   max-width: 1400px;
   padding: 3rem 1rem 1rem;
 }
-.app .wrap-container .app__collapse {
+.app .wrap-container .collapse-container {
+  position: relative;
+  left: 0px;
+}
+.app .wrap-container .collapse-container .app__collapse {
   width: 100%;
   display: block;
   position: relative;
   overflow: hidden;
   transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.app .wrap-container .app__collapse .app__collapse--gradient .app__content {
+.app .wrap-container .collapse-container .app__collapse .app__collapse--gradient .app__content {
   border-color: transparent;
 }
-.app .wrap-container .app__collapse .app__collapse--gradient .app__collapse--gradient:after {
+.app .wrap-container .collapse-container .app__collapse .app__collapse--gradient .app__collapse--gradient:after {
   pointer-events: none;
   transition: opacity 300ms;
   will-change: opacity;
@@ -85,19 +89,19 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(transparent 50%, white);
+  background: linear-gradient(transparent 50%, #ffffff);
 }
-.app .wrap-container .app__collapse .app__collapse--active .app__collapse--active:after {
+.app .wrap-container .collapse-container .app__collapse .app__collapse--active .app__collapse--active:after {
   opacity: 0;
 }
-.app .wrap-container .app__content {
+.app .wrap-container .collapse-container .app__content {
   border: 1px solid transparent;
   padding: 1rem 0;
   margin-bottom: 3rem;
   position: relative;
   transition: 300ms;
 }
-.app .wrap-container .app__content .wrap-form {
+.app .wrap-container .collapse-container .app__content .wrap-form {
   display: inline-block;
   background-color: aquamarine;
   padding: 0px 20px;
@@ -106,11 +110,11 @@ body {
   left: 20px;
   position: relative;
 }
-.app .wrap-container .app__content .wrap-form .container-form .container-form-subcontent {
+.app .wrap-container .collapse-container .app__content .wrap-form .container-form .container-form-subcontent {
   left: 40px;
   position: relative;
 }
-.app .wrap-container .app__toggle {
+.app .wrap-container .collapse-container .app__toggle {
   width: 100%;
   margin: 1rem 0;
   border: 1px solid transparent;
@@ -124,20 +128,20 @@ body {
   background-color: #fff;
   transition: background-color 300ms;
 }
-.app .wrap-container .app__toggle .app__toggle--active {
+.app .wrap-container .collapse-container .app__toggle .app__toggle--active {
   background-color: #fafafa;
 }
-.app .wrap-container .app__toggle-text {
+.app .wrap-container .collapse-container .app__toggle-text {
   font-size: inherit;
 }
-.app .wrap-container .app__button {
+.app .wrap-container .collapse-container .app__button {
   display: block;
   width: 20rem;
   max-width: 100%;
   margin: 0 auto;
   padding: 1rem;
 }
-.app .wrap-container .app__wrap {
+.app .wrap-container .collapse-container .app__wrap {
   width: 100%;
   max-width: 100%;
   height: auto;
