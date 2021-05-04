@@ -75,161 +75,59 @@ function Directory() {
     useEffect(() => {
         const d = Comp();
         d.then(function(result) {
-            const arr = [
-                {
-                    id: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    docType: "string",
-                    docStructure: {"iin":"required"},
-                    version: "string",
-                    parentId: "",
-                    deepestNode: true
-                },
-                {
-                    id: "bb2501e5-ef16-4982-b06c-f84882b5fb3e",
-                    docType: "string",
-                    docStructure: {"iin": "required", "person": {"name": "required"}},
-                    version: "string",
-                    parentId: "",
-                    deepestNode: true
-                },
-                {
-                    id: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "",
-                    deepestNode: true
-                },
-                {
-                    id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {"iin": "", "good": "required", "person": {"name": "required"}},
-                    version: "string",
-                    parentId: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
-                    deepestNode: true
-                },
-                {
-                    id: "9f25ae26-a66e-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
-                    deepestNode: true
-                },
-                {
-                    id: "288f55a8-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "",
-                    deepestNode: true
-                },
-                {
-                    id: "400e49be-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {"iin": "required", "good": "", "person": {"name": "required"}},
-                    version: "string",
-                    parentId: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    deepestNode: true
-                },
-                {
-                    id: "30c92410-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    deepestNode: true
-                },
-                {
-                    id: "772b18b4-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {"ip": "required", "type": "required", "terms": {"id": "required", "scope": "required", "partner": {"id": "required", "title": "required", "externalId": "required"}, "version": "required", "activity": "required", "beginDate": "required", "documentID": "required", "publickLink": "required", "termVersionID": "required"}, "customer": {"id": "required", "iin": "required", "phone": "required", "surname": "required", "firstname": "required", "externalId": "required"}, "location": "required", "beginDate": "required", "initiator": {"ip": "required", "system": "required", "userName": "required", "userSurname": "required", "userExternalId": "required"}, "expirationDate": "required", "revocationDate": "required"},
-                    version: "string",
-                    parentId: "30c92410-a639-11eb-bcbc-0242ac130002",
-                    deepestNode: true
-                },
-                {
-                    id: "8091a08a-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "",
-                    deepestNode: true
-                },
-                {
-                    id: "8512f370-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {"ip": "required", "type": "required", "terms": {"id": "required", "scope": "required", "partner": {"id": "required", "title": "required", "externalId": "required"}, "version": "required", "activity": "required", "beginDate": "required", "documentID": "required", "publickLink": "required", "termVersionID": "required"}, "customer": {"id": "required", "iin": "required", "phone": "required", "surname": "required", "firstname": "required", "externalId": "required"}, "location": "required", "beginDate": "required", "initiator": {"ip": "required", "system": "required", "userName": "required", "userSurname": "required", "userExternalId": "required"}, "expirationDate": "required", "revocationDate": "required"},
-                    version: "string",
-                    parentId: "",
-                    deepestNode: true
-                },
-                {
-                    id: "9019c17c-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "30c92410-a639-11eb-bcbc-0242ac130002",
-                    deepestNode: true
-                },
-                {
-                    id: "94dd5fde-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "20f5a43c-a639-11eb-bcbc-0242ac130002",
-                    deepestNode: true
-                },
-                {
-                    id: "a04c3160-a639-11eb-bcbc-0242ac130002",
-                    docType: "string",
-                    docStructure: {},
-                    version: "string",
-                    parentId: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    deepestNode: true
-                }
-            ]
-            if (arr.length > 0) {
+            if (result.length > 0) {
                 var chain_of_nodes = [];
                 var m = [];
     
                 // construct the array of chain of nodes according to parenthood
-                arr.forEach(r => {
+                result.forEach(r => {
                     if(r.parentId != "" && r.parentId != null) {
-                        var m = [];
-                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, arr))));
+                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, result))));
                         m = [];
+                    } else {
+                        chain_of_nodes.push([r])
                     }
                 })
-    
-                // sort according to length
-                var sorted_chain_of_nodes = [].concat(chain_of_nodes);
-                sorted_chain_of_nodes.sort((a, b) => a.length < b.length ? 1 : -1)
-    
-                // remove duplicates in array
-                sorted_chain_of_nodes.forEach((ch, elem) => {
-                    sorted_chain_of_nodes.forEach((ch1, i) => {
-                        if(ch.length > ch1.length) {
-                            let size = ch1.length;
-                            var equals = true;
-                            
-                            let subChain = ch.slice(ch.length - size, size+1);
-                            subChain.forEach((sch, idx) => {
-                                if(_.isEqual(sch, ch1[idx]) === false) {
-                                    equals = false;
+
+                var chainData = []
+                var collapseArr = [];
+                // construct an array which is suitable to build forms based on final refactored array
+                if(chain_of_nodes.length == 1) {
+                    var n = chain_of_nodes[0][0];
+                    if(!(Object.entries(n.doc_structure).length === 0)) {
+                        m = Array.from(new Set(recursive(n.doc_structure, m)));    
+                    }
+                    chainData.push({id: n.id, docType: n.docType, docStructure: m, version: n.version, parentId: n.parentId, deepestNode: n.deepestNode});
+                    setData(chainData);
+                    
+                    collapseArr.push({isOpen: false});
+                    setCollapse(collapseArr);
+                } else if(chain_of_nodes.length > 1) {
+                    // sort according to length
+                    var sorted_chain_of_nodes = [].concat(chain_of_nodes);
+                    sorted_chain_of_nodes.sort((a, b) => a.length < b.length ? 1 : -1)
+
+                    // remove duplicates in array
+                    sorted_chain_of_nodes.forEach((ch, elem) => {
+                        sorted_chain_of_nodes.forEach((ch1, i) => {
+                            if(ch.length > ch1.length && ch1.length != 1) {
+                                let size = ch1.length;
+                                var equals = true;
+                                
+                                let subChain = ch.slice(ch.length - size, size+1);
+                                subChain.forEach((sch, idx) => {
+                                    if(_.isEqual(sch, ch1[idx]) === false) {
+                                        equals = false;
+                                    }
+                                })
+        
+                                if(equals) {
+                                    sorted_chain_of_nodes = sorted_chain_of_nodes.filter(x=> x != ch1);
                                 }
-                            })
-    
-                            if(equals) {
-                                sorted_chain_of_nodes = sorted_chain_of_nodes.filter(x=> x != ch1);
                             }
-                        }
+                        })
                     })
-                })
-    
-                // construct array which is suitable to build forms based on final refactored array
-                if(sorted_chain_of_nodes.length > 0) {
-                    var chainData = []
+
                     sorted_chain_of_nodes.forEach(node => {
                         var chainNode = []
                         node.forEach(n => {
@@ -243,7 +141,6 @@ function Directory() {
                     })
                     setData(chainData);
 
-                    var collapseArr = [];
                     sorted_chain_of_nodes.forEach(sch => {
                         var one = [];
                         sch.forEach(n => {
@@ -259,51 +156,78 @@ function Directory() {
 
     function toggle(index, subindex) {
         let collapseArr = {...collapse};
-        let collapseItem = {...collapse[index][subindex]};
-        collapseItem.isOpen = !collapseItem.isOpen;
-        collapseArr[index][subindex] = collapseItem;
-        setCollapse(collapseArr)
+        if(Object.keys(collapseArr).length > 1) {
+            let collapseItem = {...collapse[index][subindex]};
+            collapseItem.isOpen = !collapseItem.isOpen;
+            collapseArr[index][subindex] = collapseItem;
+            setCollapse(collapseArr)
+        }
+        else {
+            let collapseItem = {...collapse[0]};
+            collapseItem.isOpen = !collapseItem.isOpen;
+            collapseArr[0] = collapseItem;
+            setCollapse(collapseArr)
+        }
+    }
+
+    const FormObject = ({recursive_objects}) => {
+        return (recursive_objects.map(obj => (
+            typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
+                <div className="container-form-content">
+                    {isNaN(k) && <h6>{k}:</h6>}<br/>
+                    <FormObject recursive_objects={obj[k]}/>
+                </div>
+            )) : Object.keys(obj).map(k => (
+                <div className="container-form-subcontent">
+                    {isNaN(k) && <h6>{k}:</h6>}
+                    {isNaN(k) && obj[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
+                </div>
+            ))
+        )));
     }
 
     const Category = ({recursive_sch, index, index2}) => {
+
+        if(collapse.length <= 0)
+        {
+            return <div>No Content</div>
+        }
+
+        var collapseIsOpen = false;
+        if(data.length == 1) {
+            collapseIsOpen = collapse[index2].isOpen;
+        } else {
+            collapseIsOpen = collapse[index][index2].isOpen;
+        }
+
         return (
             <div className="collapse-container">
                 <button
                     className={cx("app__toggle", {
-                        "app__toggle--active": collapse[index][index2]
+                        "app__toggle--active": collapseIsOpen
                     })}
                     onClick={() => toggle(index, index2)}
                     >
                     <span className="app__toggle-text">Category {index+1}</span>
                     <div className="rotate90">
                         <svg
-                        className={cx("icon", { "icon--expanded": collapse[index][index2] })}
+                        className={cx("icon", { "icon--expanded": collapseIsOpen })}
                         viewBox="6 0 12 24"
                         >
                         <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
                         </svg>
                     </div>
                 </button>
-                <Collapse isOpen={{...collapse[index][index2]}.isOpen} className={"app__collapse app__collapse--gradient " +
-                (collapse[index][index2] ? "app__collapse--active" : "")}>
+                <Collapse isOpen={collapseIsOpen} className={"app__collapse app__collapse--gradient " +
+                (collapseIsOpen ? "app__collapse--active" : "")}>
                     <div className="app__content">
                         <div class="wrap-form">
                             <h5>{recursive_sch[index2].id}</h5>
+                            {typeof Object.values(recursive_sch[index2].docStructure) == 'object' && recursive_sch[index2].docStructure.length > 0 &&
                             <form className="container-form">
-                                {recursive_sch[index2].docStructure.map(obj => (
-                                    typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
-                                        <div className="container-form-content">
-                                            {isNaN(k) && <h6>{k}</h6>}:<br/>
-                                        </div>                                 
-                                    )) : Object.keys(obj).map(k => (
-                                        <div className="container-form-subcontent">
-                                            {isNaN(k) && <h6>{k}</h6>}: &nbsp;
-                                            {isNaN(k) && obj[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
-                                        </div>
-                                    ))
-                                ))}
+                                <FormObject recursive_objects={recursive_sch[index2].docStructure}/>
                                 <input className="submit" type="submit" value="Submit"/><br/><br/>
-                            </form>
+                            </form>}
                         </div>
                         <button onClick={() => toggle(index, index2)} className="app__button">
                             close
@@ -320,15 +244,16 @@ function Directory() {
             <div>
                 <h2>Doctypes</h2>
             </div>
-            {collapse.length > 0 && 
             <div className="app">
-                {data.map((d, index) => (
+                {data.length > 1 ? data.map((d, index) => (
                     <div className="wrap-container">
                         <Category recursive_sch={[...d].reverse()} index={index} index2={0}/>
                     </div>
-                ))}
+                )) : 
+                <div className="wrap-container">
+                    <Category recursive_sch={data} index={0} index2={0}/>
+                </div>}
             </div>
-            }
         </div>
     );
 }
