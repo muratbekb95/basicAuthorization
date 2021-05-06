@@ -1,11 +1,11 @@
-import React, { useEffect, useState, createRef } from 'react';
-import useToken from '../../useToken';
-import '../../static/css/Menu.css';
+import React, { useEffect, useState } from 'react';
+import useToken from '../../../useToken';
+import '../../../static/css/Menu.css';
 import _ from 'lodash';
 import Collapse from "@kunukn/react-collapse";
 import cx from "classnames";
 
-async function returnAllDocTypes(credentials) {
+async function returnDocumentTypesRootAll(credentials) {
     return fetch('http://localhost:5053/document-types/root/all', {
         method: 'GET',
         headers: {
@@ -15,7 +15,7 @@ async function returnAllDocTypes(credentials) {
     }).then(r=>r.json())
 }
 
-function Directory() {
+function DocumentTypesRootAll() {
     const { token, setToken } = useToken();
     const [data, setData] = useState([]);
     const [collapse, setCollapse] = useState([]);
@@ -66,14 +66,14 @@ function Directory() {
         return m
     }
 
-    async function Comp() {
-        return await returnAllDocTypes({
+    async function Exec() {
+        return await returnDocumentTypesRootAll({
             token
         });
     }
 
     useEffect(() => {
-        const d = Comp();
+        const d = Exec();
         d.then(function(result) {
             if (result.length > 0) {
                 var chain_of_nodes = [];
@@ -242,7 +242,7 @@ function Directory() {
     return (
         <div className="container">
             <div>
-                <h2>Doctypes</h2>
+                <h2>Document Types Root All</h2>
             </div>
             <div className="app">
                 {data.length > 1 ? data.map((d, index) => (
@@ -258,4 +258,4 @@ function Directory() {
     );
 }
 
-export default Directory;
+export default DocumentTypesRootAll;
