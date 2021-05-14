@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
+import useGeo from '../../../useGeo';
 import '../../../static/css/DocumentTypesRootAll.css';
 import _ from 'lodash';
 import Collapse from "@kunukn/react-collapse";
@@ -11,13 +12,14 @@ async function returnDocumentTypesRootAll(credentials) {
         headers: {
             'Content-Type': 'application/json',
             'Authorization': credentials.token,
-            // 'Geo': credentials.geo
+            'Geo': credentials.geo
         }
     }).then(r=>r.json())
 }
 
 function DocumentTypesRootAll() {
     const { token, setToken } = useToken();
+    const { geo, setGeo } = useGeo();
     const [data, setData] = useState([]);
     const [collapse, setCollapse] = useState([]);
 
@@ -70,7 +72,7 @@ function DocumentTypesRootAll() {
     async function Exec() {
         return await returnDocumentTypesRootAll({
             token,
-            //geo
+            geo
         });
     }
 

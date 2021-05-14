@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
 import sberbankLogo from "../../../static/img/sberbank-logo.png"
@@ -6,20 +6,27 @@ import sberbankLogo from "../../../static/img/sberbank-logo.png"
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
 import Dashboard from '../../Dashboard/Dashboard';
-import "../DocumentEditor/DocumentEditor.css"
 import DocumentUpload from './DocumentUpload/DocumentUpload';
 import DocumentSearch from './DocumentSearch/DocumentSearch';
 
-import useGeo from '../../../useGeo';
-
 export default function DocumentEditor() {
+
     const usernameString = sessionStorage.getItem('username');
     const userUsername = JSON.parse(usernameString);
 
-    const { geo, setGeo } = useGeo();
-    
+    const geoString = sessionStorage.getItem('geo');
+    const geo = JSON.parse(geoString);
+
+    const [currentGeo, setCurrentGeo] = useState();
+
+    useEffect(() => {
+        if(geo.length != 0) {
+            setCurrentGeo(geo[0])
+        }
+    }, [])
+
     return (
-        <div className="container">
+        <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">
@@ -27,25 +34,18 @@ export default function DocumentEditor() {
                     </a>
                     <form class="mx-5 d-flex">
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Поиск"/>
-                            <button class="btn btn-outline-success" type="submit">Поиск</button>
+                            <button class="fa fa-search px-3" type="submit"></button>
                     </form>
-                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Dropdown
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    {geo.map(g => {
-                                        <li><button class="dropdown-item" onClick={console.log()}>{g}</button></li>
-                                    })}
-                                </ul>
-                            </li>
-                            <li class="nav-item">
-                                <p class="lead" tabindex="-1" aria-disabled="true" dangerouslySetInnerHTML={{__html: userUsername}}></p>
-                            </li>
-                        </ul>
-                    </div>
+                    {geo.length !=0 && 
+                    <div class="navbar-nav">
+                        <select id="geo" name="geo" onChange={e => setCurrentGeo(e.target.value)}>
+                            {geo.map(g => (
+                                <option value={g}>{g}</option>
+                            ))}
+                        </select>
+                    </div>}
+                    {userUsername != null &&
+                    <p class="lead">{userUsername}</p>}
                 </div>
             </nav>
             <br/>

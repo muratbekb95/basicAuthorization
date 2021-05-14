@@ -32,7 +32,7 @@ function App() {
   const { geo, setGeo } = useGeo();
 
   if(!token && !geo) {
-    return <Login setToken={setToken} setGeo={setGeo} />
+    return <Login setToken={setToken} setGeo={setGeo} />;
   }
 
   return (

@@ -21,15 +21,17 @@ export default function DocumentUpload(props) {
   const AttributeFields = props => {
 
     return (
-      <div className={"attributeFields"+props.id}>
+      <div className={"attributeFields" + props.id}>
         <div className="block">
-          Атрибут: <input type="text" id="attrubuteFieldsKey">{  }</input><br/>
-          Значение: <input type="text" id="attrubuteFieldsValue">{  }</input><br/>
+          Атрибут: <input type="text" id="attrubuteFieldsKey">{ }</input><br />
+          Значение: <input type="text" id="attrubuteFieldsValue">{ }</input><br />
         </div>
         <div className="block">
-          <button onClick={(e) => {removeAttr(e, props);}}>Удалить атрибут</button><br/>
+          <button onClick={(e) => { removeAttr(e, props); }}>
+            <i class="fa fa-minus-circle" aria-hidden="true"></i> Удалить атрибут
+          </button><br />
         </div>
-        <br/>
+        <br />
       </div>
     );
   }
@@ -93,11 +95,13 @@ export default function DocumentUpload(props) {
       <div className="AttributesAppend">
         <h6>Добавление атрибутов</h6>
         <div id="attributes">
-          {components.map((comp, i) => 
+          {components.map((comp, i) =>
             <AttributeFields key={i} id={i} attrubuteFieldsKey={components[i].attrubuteFieldsKey} attrubuteFieldsValue={components[i].attrubuteFieldsValue} />
           )}
         </div>
-        <button class="mb-5" onClick={(e) => {addAttributeFields(e, "attributes")}}>Добавить атрибут</button>
+        <button class="mb-5" onClick={(e) => { addAttributeFields(e, "attributes") }}>
+          <i class="fa fa-plus-circle" aria-hidden="true"></i> Добавить атрибут
+        </button>
       </div>
     </div>
   );
