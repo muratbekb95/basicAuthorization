@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
-import '../../../static/css/Menu.css';
 import _ from 'lodash';
 
 async function findAllMetadataWithTextSearching(credentials) {

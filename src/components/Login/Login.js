@@ -3,26 +3,28 @@ import PropTypes from 'prop-types';
 import './Login.css';
 
 async function loginUser(credentials) {
-  return fetch('http://localhost:5052/auth/login', {
+  return fetch('http://localhost:9090/auth/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(credentials)
-  }).then(r=>r.headers)
+  })
 }
 
-export default function Login({ setToken }) {
+export default function Login({ setToken, setGeo }) {
   const [username, setUserName] = useState();
-  const [geo, setGeo] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault();
     const token = await loginUser({
-      username,
-      geo
+      username
+    })
+    const r = token.json().then(function(result) {
+      setGeo(result.geo);
+      setToken(token.headers.get('Authorization'));
+      sessionStorage.setItem('username', JSON.stringify(username));
     });
-    setToken(token.get('Authorization'));
   }
 
   return(
@@ -33,7 +35,7 @@ export default function Login({ setToken }) {
           <p>Username</p>
           <input type="text" required="required" onChange={e => setUserName(e.target.value)}/>
         </label>
-        <br/><br/>
+        {/* <br/><br/>
         <label htmlFor="geo">Geo </label>
         <select id="geo" name="geo" onChange={e => setGeo(e.target.value)}>
           <option value="CENTRAL">Центральный офис</option>
@@ -54,7 +56,7 @@ export default function Login({ setToken }) {
           <option value="TARAZ">Тараз</option>
           <option value="SHYMKENT">Шымкент</option>
         </select>
-        <br/><br/>
+        <br/><br/> */}
         <div>
           <button type="submit">Submit</button>
         </div>
@@ -64,5 +66,6 @@ export default function Login({ setToken }) {
 }
 
 Login.propTypes = {
-  setToken: PropTypes.func.isRequired
+  setToken: PropTypes.func.isRequired,
+  setGeo: PropTypes.func.isRequired
 }

@@ -4,7 +4,8 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import './App.css';
 import Login from './components/Login/Login';
 import Dashboard from './components/Dashboard/Dashboard';
-import Preferences from './components/Preferences/Preferences';
+import Preferences from './components/Documents/DocumentEditor/DocumentUpload/DocumentUpload';
+import DocumentEditor from './components/Documents/DocumentEditor/DocumentEditor'
 
 import DocumentTypes from './components/Documents/DocumentTypes/DocumentTypes';
 import DocumentTypesName from './components/Documents/DocumentTypes/DocumentTypesName';
@@ -21,13 +22,17 @@ import FindAll from './components/Documents/Metadata/FindAll';
 import Search from './components/Documents/Search';
 import DownloadUpload from './components/Documents/DownloadUpload';
 import useToken from './useToken';
+import useGeo from './useGeo';
+
+import { Redirect } from "react-router-dom";
 
 function App() {
 
   const { token, setToken } = useToken();
+  const { geo, setGeo } = useGeo();
 
-  if(!token) {
-    return <Login setToken={setToken} />
+  if(!token && !geo) {
+    return <Login setToken={setToken} setGeo={setGeo} />
   }
 
   return (
@@ -35,6 +40,9 @@ function App() {
       <h1>Application</h1>
       <BrowserRouter>
         <Switch>
+          <Route exact path="/">
+            {<Redirect to="/document-editor" />}
+          </Route>
           <Route path="/dashboard">
             <Dashboard />
           </Route>
@@ -58,22 +66,25 @@ function App() {
             <DocumentTypes />
           </Route>
           
-          {/* <Route path="/metadata/search/full">
+          <Route path="/metadata/search/full">
             <FindAllWithFullSearching />
-          </Route> */}
+          </Route>
           <Route path="/metadata/search/text">
             <FindAllWithTextSearching />
           </Route>
-          {/* <Route path="/metadata/search/:search">
+          <Route path="/metadata/search/:search">
             <FindAllWithConditions />
-          </Route> */}
-          {/* <Route path="/metadata/:metadata_id">
+          </Route>
+          <Route path="/metadata/:metadata_id">
             <GetFileMetadata />
-          </Route> */}
-          {/* <Route path="/metadata">
+          </Route>
+          <Route path="/metadata">
             <FindAll />
-          </Route> */}
+          </Route>
 
+          <Route path="/document-editor">
+            <DocumentEditor />
+          </Route>
           <Route path="/search">
             <Search />
           </Route>
