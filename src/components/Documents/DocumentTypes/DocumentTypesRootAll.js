@@ -1,25 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
-import useGeo from '../../../useGeo';
+import useCurrentGeo from '../../../useCurrentGeo';
 import '../../../static/css/DocumentTypesRootAll.css';
-import _ from 'lodash';
+import _, { chain } from 'lodash';
 import Collapse from "@kunukn/react-collapse";
 import cx from "classnames";
 
-async function returnDocumentTypesRootAll(credentials) {
-    return fetch('http://localhost:9091/document-types/root/all', {
+async function returnDocumentTypesIdVersions(credentials) {
+    return fetch('http://doctype-haos.apps.ocp-t.sberbank.kz/document-types/'+credentials.id+'/versions', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': credentials.token,
-            'Geo': credentials.geo
+            'Geo': credentials.currentGeo
+        }
+    }).then(r=>r.json())
+}
+
+async function returnDocumentTypesRootAll(credentials) {
+    return fetch('http://doctype-haos.apps.ocp-t.sberbank.kz/document-types/root/all', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo
         }
     }).then(r=>r.json())
 }
 
 function DocumentTypesRootAll() {
     const { token, setToken } = useToken();
-    const { geo, setGeo } = useGeo();
+    const { currentGeo, setCurrentGeo } = useCurrentGeo();
     const [data, setData] = useState([]);
     const [collapse, setCollapse] = useState([]);
 
@@ -72,136 +83,29 @@ function DocumentTypesRootAll() {
     async function Exec() {
         return await returnDocumentTypesRootAll({
             token,
-            geo
+            currentGeo
         });
+    }
+
+    async function Exec2(id) {
+        return await returnDocumentTypesIdVersions({
+            token,
+            currentGeo,
+            id
+        })
     }
 
     useEffect(() => {
         const d = Exec();
         d.then(function(result) {
-            const arr = [
-                {
-                    id: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    doc_type: "string",
-                    doc_structure: { "iin": "required" },
-                    version: "string",
-                    parent_id: "",
-                    deepest_node: true
-                },
-                {
-                    id: "bb2501e5-ef16-4982-b06c-f84882b5fb3e",
-                    doc_type: "string",
-                    doc_structure: { "iin": "required", "person": { "name": "required" } },
-                    version: "string",
-                    parent_id: "",
-                    deepest_node: true
-                },
-                {
-                    id: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "",
-                    deepest_node: true
-                },
-                {
-                    id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: { "iin": "", "good": "required", "person": { "name": "required" } },
-                    version: "string",
-                    parent_id: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
-                    deepest_node: true
-                },
-                {
-                    id: "9f25ae26-a66e-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
-                    deepest_node: true
-                },
-                {
-                    id: "288f55a8-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "",
-                    deepest_node: true
-                },
-                {
-                    id: "400e49be-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: { "iin": "required", "good": "", "person": { "name": "required" } },
-                    version: "string",
-                    parent_id: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    deepest_node: true
-                },
-                {
-                    id: "30c92410-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    deepest_node: true
-                },
-                {
-                    id: "772b18b4-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: { "ip": "required", "type": "required", "terms": { "id": "required", "scope": "required", "partner": { "id": "required", "title": "required", "externalId": "required" }, "version": "required", "activity": "required", "beginDate": "required", "documentID": "required", "publickLink": "required", "termVersionID": "required" }, "customer": { "id": "required", "iin": "required", "phone": "required", "surname": "required", "firstname": "required", "externalId": "required" }, "location": "required", "beginDate": "required", "initiator": { "ip": "required", "system": "required", "userName": "required", "userSurname": "required", "userExternalId": "required" }, "expirationDate": "required", "revocationDate": "required" },
-                    version: "string",
-                    parent_id: "30c92410-a639-11eb-bcbc-0242ac130002",
-                    deepest_node: true
-                },
-                {
-                    id: "8091a08a-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "",
-                    deepest_node: true
-                },
-                {
-                    id: "8512f370-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: { "ip": "required", "type": "required", "terms": { "id": "required", "scope": "required", "partner": { "id": "required", "title": "required", "externalId": "required" }, "version": "required", "activity": "required", "beginDate": "required", "documentID": "required", "publickLink": "required", "termVersionID": "required" }, "customer": { "id": "required", "iin": "required", "phone": "required", "surname": "required", "firstname": "required", "externalId": "required" }, "location": "required", "beginDate": "required", "initiator": { "ip": "required", "system": "required", "userName": "required", "userSurname": "required", "userExternalId": "required" }, "expirationDate": "required", "revocationDate": "required" },
-                    version: "string",
-                    parent_id: "",
-                    deepest_node: true
-                },
-                {
-                    id: "9019c17c-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "30c92410-a639-11eb-bcbc-0242ac130002",
-                    deepest_node: true
-                },
-                {
-                    id: "94dd5fde-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
-                    deepest_node: true
-                },
-                {
-                    id: "a04c3160-a639-11eb-bcbc-0242ac130002",
-                    doc_type: "string",
-                    doc_structure: {},
-                    version: "string",
-                    parent_id: "076b114a-0e8e-4995-a18e-201521fdedc1",
-                    deepest_node: true
-                }
-            ]
-            console.log(result)
-            if (arr.length > 0) {
+            if (result.length > 0) {
                 var chain_of_nodes = [];
                 var m = [];
     
                 // construct the array of chain of nodes according to parenthood
-                arr.forEach(r => {
+                result.forEach(r => {
                     if(r.parent_id != "" && r.parent_id != null) {
-                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, arr))));
+                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, result))));
                         m = [];
                     } else {
                         chain_of_nodes.push([r])
@@ -216,7 +120,7 @@ function DocumentTypesRootAll() {
                     if(!(Object.entries(n.doc_structure).length === 0)) {
                         m = Array.from(new Set(recursive(n.doc_structure, m)));    
                     }
-                    chainData.push({id: n.id, doc_type: n.doc_type, doc_structure: m, version: n.version, parent_id: n.parent_id, deepest_node: n.deepest_node});
+                    chainData.push({id: n.id, doc_type_id: n.doc_type_id, doc_structure: m, version: n.version});
                     setData(chainData);
                     
                     collapseArr.push({isOpen: false});
@@ -250,11 +154,18 @@ function DocumentTypesRootAll() {
                     sorted_chain_of_nodes.forEach(node => {
                         var chainNode = []
                         node.forEach(n => {
-                            if(!(Object.entries(n.doc_structure).length === 0)) {
-                                m = Array.from(new Set(recursive(n.doc_structure, m)));    
+                            if(n.deepest_node) {
+                                const d2 = Exec2(n.id);
+                                d2.then(function(result2) {
+                                    result2.versions.forEach(v => {
+                                        if(!(Object.entries(v.doc_structure).length === 0)) {
+                                            m = Array.from(new Set(recursive(v.doc_structure, m)));
+                                        }
+                                        chainNode.push({id: v.id, doc_type_id: v.doc_type_id, doc_structure: m, version: v.version})
+                                        m = [];
+                                    })
+                                })
                             }
-                            chainNode.push({id: n.id, doc_type: n.doc_type, doc_structure: m, version: n.version, parent_id: n.parent_id, deepest_node: n.deepest_node});
-                            m = [];
                         })
                         chainData.push(chainNode)
                     })
@@ -290,7 +201,9 @@ function DocumentTypesRootAll() {
     }
 
     const FormObject = ({recursive_objects}) => {
+        console.log("Form")
         return (recursive_objects.map(obj => (
+            console.log(obj) &&
             typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
                 <div className="container-form-content">
                     {isNaN(k) && <h6>{k}:</h6>}<br/>
@@ -326,49 +239,58 @@ function DocumentTypesRootAll() {
                         "app__toggle--active": collapseIsOpen
                     })}
                     onClick={() => toggle(index, index2)}
-                    >
-                    <span className="app__toggle-text">Категория {index+1}</span>
+                >
+                    <span className="app__toggle-text">Категория {index + 1}</span>
                     <div className="rotate90">
                         <svg
-                        className={cx("icon", { "icon--expanded": collapseIsOpen })}
-                        viewBox="6 0 12 24"
+                            className={cx("icon", { "icon--expanded": collapseIsOpen })}
+                            viewBox="6 0 12 24"
                         >
-                        <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
+                            <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
                         </svg>
                     </div>
                 </button>
                 <Collapse isOpen={collapseIsOpen} className={"app__collapse app__collapse--gradient " +
-                (collapseIsOpen ? "app__collapse--active" : "")}>
+                    (collapseIsOpen ? "app__collapse--active" : "")}>
                     <div className="app__content">
                         <div class="wrap-form">
-                            <h5>{recursive_sch[index2].id}</h5>
-                            {typeof Object.values(recursive_sch[index2].doc_structure) == 'object' && recursive_sch[index2].doc_structure.length > 0 &&
+
+                            {/* {recursive_sch.length > 1 ? <h5>{recursive_sch[index2].id}</h5> && typeof Object.values(recursive_sch[index2].doc_structure) == 'object' && recursive_sch[index2].doc_structure.length > 0 &&
                             <form className="container-form">
                                 <FormObject recursive_objects={recursive_sch[index2].doc_structure}/>
                                 <input className="submit" type="submit" value="Submit"/><br/><br/>
-                            </form>}
+                            </form> : console.log(recursive_sch) && <h5>{recursive_sch.id}</h5> && typeof Object.values(recursive_sch.doc_structure) == 'object' && recursive_sch.doc_structure.length > 0 &&
+                            <form className="container-form">
+                                <FormObject recursive_objects={recursive_sch.doc_structure}/>
+                                <input className="submit" type="submit" value="Submit"/><br/><br/>
+                            </form>
+                        } */}
                         </div>
                         <button onClick={() => toggle(index, index2)} className="app__button">
                             close
-                        </button>
-                        {index2 < recursive_sch.length-1 && <Category recursive_sch={recursive_sch} index={index} index2={index2+1}/>}
+                    </button>
+                        {index2 < recursive_sch.length - 1 && <Category recursive_sch={recursive_sch} index={index} index2={index2 + 1} />}
                     </div>
                 </Collapse>
-            </div>
-        );
+            </div>);
     }
 
     return (
         <div className="container">
             <div className="app">
-                {data.length > 1 ? data.map((d, index) => (
+                {data.length > 0 && 
+                    data.map(d => (
+                        console.log(d)
+                    ))}
+                {/* {data.length > 1 ? [...data].map((d, index) => (
                     <div className="wrap-container">
-                        <Category recursive_sch={[...d].reverse()} index={index} index2={0}/>
+                        {console.log(d.doc_structure)}
+                        {d.length > 1 ? <Category recursive_sch={[...d].reverse()} index={index} index2={0}/> : <Category recursive_sch={d} index={index} index2={0}/>}
                     </div>
                 )) : 
                 <div className="wrap-container">
                     <Category recursive_sch={data} index={0} index2={0}/>
-                </div>}
+                </div>} */}
             </div>
         </div>
     );

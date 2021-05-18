@@ -21,6 +21,7 @@ export default function DocumentEditor() {
 
     useEffect(() => {
         if(geo.length != 0) {
+            sessionStorage.setItem('currentGeo', JSON.stringify(geo[0]));
             setCurrentGeo(geo[0])
         }
     }, [])
@@ -38,7 +39,10 @@ export default function DocumentEditor() {
                     </form>
                     {geo.length !=0 && 
                     <div class="navbar-nav">
-                        <select id="geo" name="geo" onChange={e => setCurrentGeo(e.target.value)}>
+                        <select id="geo" name="geo" onChange={e => {
+                            setCurrentGeo(e.target.value)
+                            sessionStorage.setItem('currentGeo', JSON.stringify(e.target.value));
+                        }}>
                             {geo.map(g => (
                                 <option value={g}>{g}</option>
                             ))}

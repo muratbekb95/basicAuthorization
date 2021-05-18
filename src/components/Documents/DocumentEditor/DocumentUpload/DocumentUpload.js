@@ -12,53 +12,42 @@ export default function DocumentUpload(props) {
     document.getElementById("fileNameFromInputFile").value = e.target.files[0].name;
   }
 
+  const [attributes, setAttributes] = useState([]);
+
   function removeAttr(e, props) {
-    let clone = [...components]
+    let clone = [...attributes]
     clone.splice(props.id, 1)
-    setComponents(clone)
-  }
-
-  const AttributeFields = props => {
-
-    return (
-      <div className={"attributeFields" + props.id}>
-        <div className="block">
-          Атрибут: <input type="text" id="attrubuteFieldsKey">{ }</input><br />
-          Значение: <input type="text" id="attrubuteFieldsValue">{ }</input><br />
-        </div>
-        <div className="block">
-          <button onClick={(e) => { removeAttr(e, props); }}>
-            <i class="fa fa-minus-circle" aria-hidden="true"></i> Удалить атрибут
-          </button><br />
-        </div>
-        <br />
-      </div>
-    );
-  }
-
-  const [components, setComponents] = useState([<AttributeFields />]);
-
-  function addAttributeFields(e, c) {
-    if (document.getElementById(c).childNodes.length == 0) {
-      setComponents({
+    setAttributes(clone)
+    if (attributes.length == 0) {
+      setAttributes({
         attrubuteFieldsKey: "",
         attrubuteFieldsValue: ""
       })
-    } else {
-      var AttributeFieldsNodes = []
-      document.getElementById(c).childNodes.forEach(ch => {
-        let blockElements = ch.childNodes[0];
-        AttributeFieldsNodes.push({
-          attrubuteFieldsKey: blockElements.childNodes[1].value,
-          attrubuteFieldsValue: blockElements.childNodes[4].value
-        })
-      })
-      AttributeFieldsNodes.push({
-        attrubuteFieldsKey: "",
-        attrubuteFieldsValue: ""
-      })
-      setComponents(AttributeFieldsNodes)
     }
+  }
+
+  const Attribute = props => {
+    document.getElementById("attrubuteFieldsKey").value = "";
+    document.getElementById("attrubuteFieldsValue").value = "";
+    return (<div>
+      <div class="">
+        <p class="inline-block">{attributes[props.id].attrubuteFieldsKey}</p>
+        <p class="inline-block">{attributes[props.id].attrubuteFieldsValue}</p>
+      </div>
+      <div className="block">
+        <button onClick={(e) => { removeAttr(e, props); }}>
+          <i class="fa fa-times" aria-hidden="true"></i> Удалить атрибут
+        </button><br />
+      </div><br/>
+    </div>);
+  }
+
+  function addAttributeFields(e) {
+    e.preventDefault()
+    setAttributes(attributes => [...attributes, {
+      attrubuteFieldsKey: document.getElementById("attrubuteFieldsKey").value,
+      attrubuteFieldsValue: document.getElementById("attrubuteFieldsValue").value
+    }])
   }
 
   return (
@@ -95,13 +84,19 @@ export default function DocumentUpload(props) {
       <div className="AttributesAppend">
         <h6>Добавление атрибутов</h6>
         <div id="attributes">
-          {components.map((comp, i) =>
-            <AttributeFields key={i} id={i} attrubuteFieldsKey={components[i].attrubuteFieldsKey} attrubuteFieldsValue={components[i].attrubuteFieldsValue} />
-          )}
+          {attributes.map((attr, i) => (
+            <Attribute key={i} id={i} />
+          ))}
         </div>
-        <button class="mb-5" onClick={(e) => { addAttributeFields(e, "attributes") }}>
-          <i class="fa fa-plus-circle" aria-hidden="true"></i> Добавить атрибут
-        </button>
+        <div className="AttributeFields">
+          <form className="container-form" onSubmit={(e) => addAttributeFields(e)}>
+            <label htmlFor="attrubuteFieldsKey">Атрибут:</label> <input type="text" id="attrubuteFieldsKey" required/><br />
+            <label htmlFor="attrubuteFieldsValue">Значение:</label> <input type="text" id="attrubuteFieldsValue" required/><br />
+            <div>
+              <input class="fa fa-plus-circle" className="submit" type="submit" value="Добавить атрибут"/><br/><br/>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
