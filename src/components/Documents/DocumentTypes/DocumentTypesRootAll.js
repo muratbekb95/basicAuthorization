@@ -120,7 +120,7 @@ function DocumentTypesRootAll() {
                     if(!(Object.entries(n.doc_structure).length === 0)) {
                         m = Array.from(new Set(recursive(n.doc_structure, m)));    
                     }
-                    chainData.push({id: n.id, doc_type_id: n.doc_type_id, doc_structure: m, version: n.version});
+                    chainData.push({id: n.id, doc_type: n.doc_type, doc_type_id: n.doc_type_id, doc_structure: m, version: n.version});
                     setData(chainData);
                     
                     collapseArr.push({isOpen: false});
@@ -161,7 +161,7 @@ function DocumentTypesRootAll() {
                                         if(!(Object.entries(v.doc_structure).length === 0)) {
                                             m = Array.from(new Set(recursive(v.doc_structure, m)));
                                         }
-                                        chainNode.push({id: v.id, doc_type_id: v.doc_type_id, doc_structure: m, version: v.version})
+                                        chainNode.push({id: v.id, doc_type: n.doc_type, doc_type_id: v.doc_type_id, doc_structure: m, version: v.version})
                                         m = [];
                                     })
                                 })
@@ -169,8 +169,19 @@ function DocumentTypesRootAll() {
                         })
                         chainData.push(chainNode)
                     })
-                    setData(chainData);
-
+                    
+                    if (chainData[0][0] == undefined){
+                        const timeout = setInterval(function() {
+                            setData(chainData);
+                            if(chainData[0][0] != undefined)
+                            {
+                                clearInterval(timeout)
+                            }
+                        }, 1000)
+                    } else {
+                        setData(chainData);
+                    }
+                    
                     sorted_chain_of_nodes.forEach(sch => {
                         var one = [];
                         sch.forEach(n => {
@@ -201,9 +212,7 @@ function DocumentTypesRootAll() {
     }
 
     const FormObject = ({recursive_objects}) => {
-        console.log("Form")
         return (recursive_objects.map(obj => (
-            console.log(obj) &&
             typeof Object.values(obj)[0] == 'object' ? Object.keys(obj).map(k => (
                 <div className="container-form-content">
                     {isNaN(k) && <h6>{k}:</h6>}<br/>
@@ -232,65 +241,63 @@ function DocumentTypesRootAll() {
             collapseIsOpen = collapse[index][index2].isOpen;
         }
 
-        return (
+        return ( 
             <div className="collapse-container">
-                <button
-                    className={cx("app__toggle", {
-                        "app__toggle--active": collapseIsOpen
-                    })}
-                    onClick={() => toggle(index, index2)}
-                >
-                    <span className="app__toggle-text">Категория {index + 1}</span>
-                    <div className="rotate90">
-                        <svg
-                            className={cx("icon", { "icon--expanded": collapseIsOpen })}
-                            viewBox="6 0 12 24"
-                        >
-                            <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
-                        </svg>
-                    </div>
-                </button>
-                <Collapse isOpen={collapseIsOpen} className={"app__collapse app__collapse--gradient " +
-                    (collapseIsOpen ? "app__collapse--active" : "")}>
-                    <div className="app__content">
-                        <div class="wrap-form">
-
-                            {/* {recursive_sch.length > 1 ? <h5>{recursive_sch[index2].id}</h5> && typeof Object.values(recursive_sch[index2].doc_structure) == 'object' && recursive_sch[index2].doc_structure.length > 0 &&
-                            <form className="container-form">
-                                <FormObject recursive_objects={recursive_sch[index2].doc_structure}/>
-                                <input className="submit" type="submit" value="Submit"/><br/><br/>
-                            </form> : console.log(recursive_sch) && <h5>{recursive_sch.id}</h5> && typeof Object.values(recursive_sch.doc_structure) == 'object' && recursive_sch.doc_structure.length > 0 &&
-                            <form className="container-form">
-                                <FormObject recursive_objects={recursive_sch.doc_structure}/>
-                                <input className="submit" type="submit" value="Submit"/><br/><br/>
-                            </form>
-                        } */}
+                {recursive_sch.length > 0 && 
+                <div>
+                    <button
+                        className={cx("app__toggle", {
+                            "app__toggle--active": collapseIsOpen
+                        })}
+                        onClick={() => toggle(index, index2)}
+                    >
+                        <span className="app__toggle-text">{recursive_sch[0].doc_type}</span>
+                        <div className="rotate90">
+                            <svg
+                                className={cx("icon", { "icon--expanded": collapseIsOpen })}
+                                viewBox="6 0 12 24"
+                            >
+                                <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
+                            </svg>
                         </div>
-                        <button onClick={() => toggle(index, index2)} className="app__button">
-                            close
                     </button>
-                        {index2 < recursive_sch.length - 1 && <Category recursive_sch={recursive_sch} index={index} index2={index2 + 1} />}
-                    </div>
-                </Collapse>
-            </div>);
+                    <Collapse isOpen={collapseIsOpen} className={"app__collapse app__collapse--gradient " +
+                        (collapseIsOpen ? "app__collapse--active" : "")}>
+                        <div className="app__content">
+                            <div class="wrap-form">
+                                {recursive_sch.length > 1 ? <h5>{recursive_sch[index2].id}</h5> && typeof Object.values(recursive_sch[index2].doc_structure) == 'object' && recursive_sch[index2].doc_structure.length > 0 &&
+                                    <form className="container-form">
+                                        <FormObject recursive_objects={recursive_sch[index2].doc_structure} />
+                                        <input className="submit" type="submit" value="Submit" /><br /><br />
+                                    </form> : <h5>{recursive_sch[0].id}</h5> && typeof Object.values(recursive_sch[0].doc_structure) == 'object' && recursive_sch[0].doc_structure.length > 0 &&
+                                    <form className="container-form">
+                                        <FormObject recursive_objects={recursive_sch[0].doc_structure} />
+                                        <input className="submit" type="submit" value="Submit" /><br /><br />
+                                    </form>
+                                }
+                            </div>
+                            <button onClick={() => toggle(index, index2)} className="app__button">
+                                close
+                            </button>
+                            {index2 < recursive_sch.length - 1 && <Category recursive_sch={recursive_sch} index={index} index2={index2 + 1} />}
+                        </div>
+                    </Collapse>
+                </div>}
+            </div>
+        );
     }
 
     return (
         <div className="container">
             <div className="app">
-                {data.length > 0 && 
-                    data.map(d => (
-                        console.log(d)
-                    ))}
-                {/* {data.length > 1 ? [...data].map((d, index) => (
+                {data.length > 1 ? [...data].map((d, index) => (
                     <div className="wrap-container">
-                        {console.log(d.doc_structure)}
                         {d.length > 1 ? <Category recursive_sch={[...d].reverse()} index={index} index2={0}/> : <Category recursive_sch={d} index={index} index2={0}/>}
                     </div>
                 )) : 
                 <div className="wrap-container">
                     <Category recursive_sch={data} index={0} index2={0}/>
-                </div>} */}
+                </div>}
             </div>
         </div>
     );
