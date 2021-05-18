@@ -101,6 +101,7 @@ body {
   position: relative;
   transition: 300ms;
   background-color: limegreen;
+  width: 600px;
 }
 .app .wrap-container .collapse-container div .app__content .wrap-form {
   display: inline-block;
