@@ -126,7 +126,17 @@ function DocumentTypesRootAll() {
         setCategory(chainData[0][0])
         setSubCategory(chainData[1][1])
         setSubSubCategory(chainData[2][2])
+
+        setSelectedCategory(category[0])
+        setSelectedSubCategory(sub_category[0])
+        setSelectedSubSubCategory(sub_sub_category[0])
     }
+
+    const [selectedCategory, setSelectedCategory] = useState(category[0]);
+    const [selectedSubCategory, setSelectedSubCategory] = useState(sub_category[0]);
+    const [selectedSubSubCategory, setSelectedSubSubCategory] = useState(sub_sub_category[0]);
+    const [versions, setVersions] = useState([]);
+    const [versionDocStructure, setVersionDocStructure] = useState(null);
 
     useEffect(() => {
         // const d = Exec();
@@ -635,112 +645,6 @@ function DocumentTypesRootAll() {
         }
     }, []);
 
-    function toggle(index, subindex) {
-        let collapseArr = {...collapse};
-        if(Object.keys(collapseArr).length > 1) {
-            let collapseItem = {...collapse[index][subindex]};
-            collapseItem.isOpen = !collapseItem.isOpen;
-            collapseArr[index][subindex] = collapseItem;
-            setCollapse(collapseArr)
-        }
-        else {
-            let collapseItem = {...collapse[0]};
-            collapseItem.isOpen = !collapseItem.isOpen;
-            collapseArr[0] = collapseItem;
-            setCollapse(collapseArr)
-        }
-    }
-
-    const FormObject = ({recursive_objects}) => {
-        return (typeof Object.values(recursive_objects)[0] == 'object' ? Object.keys(recursive_objects).map(k => (
-            <div className="container-form-content">
-                {isNaN(k) && <h6>{k}:</h6>}<br/>
-                <FormObject recursive_objects={recursive_objects[k]}/>
-            </div>
-        )) : Object.keys(recursive_objects).map(k => (
-            <div className="container-form-subcontent">
-                {isNaN(k) && <h6>{k}:</h6>}
-                {isNaN(k) && recursive_objects[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
-            </div>
-        )));
-    }
-
-    const Category = ({recursive_sch}) => {
-
-        if(recursive_sch.length <= 0)
-        {
-            return <div>No Content</div>
-        }
-        
-        return ( 
-            <div className="collapse-container">
-                {recursive_sch.length > 0 && 
-                <div className="wrap-container">
-                    {<select className="category" name="category" onChange={e => { 
-                    }}>
-                        {recursive_sch.map(d => (
-                            d.length > 1 ? 
-                            <Category recursive_sch={[...d].reverse()} /> 
-                            : <option value={d.doc_type}>
-                                {d.doc_type}
-                            </option>
-                        ))}
-                    </select>}
-                    {/* index2 < recursive_sch.length - 1 && <Category recursive_sch={recursive_sch} index={index} index2={index2 + 1} />
-                    {recursive_sch[index2].version !== undefined ?
-                        typeof Object.values(recursive_sch[index2].doc_structure) == 'object' && recursive_sch[index2].doc_structure.length > 0 &&
-                        <h5>{recursive_sch[index2].id}</h5> && 
-                        <form className="container-form">
-                            <FormObject recursive_objects={recursive_sch[index2].doc_structure} />
-                            <input className="submit" type="submit" value="Submit" /><br /><br />
-                        </form> : 
-                    }
-                    <button
-                        className={cx("app__toggle", {
-                            "app__toggle--active": collapseIsOpen
-                        })}
-                        onClick={() => toggle(index, index2)}
-                    >
-                        <span className="app__toggle-text">{recursive_sch[0].doc_type}</span>
-                        <div className="rotate90">
-                            <svg
-                                className={cx("icon", { "icon--expanded": collapseIsOpen })}
-                                viewBox="6 0 12 24"
-                            >
-                                <polygon points="8 0 6 1.8 14.4 12 6 22.2 8 24 18 12" />
-                            </svg>
-                        </div>
-                    </button>
-                    <Collapse isOpen={collapseIsOpen} className={"app__collapse app__collapse--gradient " +
-                        (collapseIsOpen ? "app__collapse--active" : "")}>
-                        <div className="app__content">
-                            <div class="wrap-form">
-                                {recursive_sch[index2].version !== undefined ?
-                                    typeof Object.values(recursive_sch[index2].doc_structure) == 'object' && recursive_sch[index2].doc_structure.length > 0 &&
-                                    <h5>{recursive_sch[index2].id}</h5> && 
-                                    <form className="container-form">
-                                        <FormObject recursive_objects={recursive_sch[index2].doc_structure} />
-                                        <input className="submit" type="submit" value="Submit" /><br /><br />
-                                    </form> : <h5>{recursive_sch[index2].id}</h5>
-                                }
-                            </div>
-                            <button onClick={() => toggle(index, index2)} className="app__button">
-                                close
-                            </button>
-                            {index2 < recursive_sch.length - 1 && <Category recursive_sch={recursive_sch} index={index} index2={index2 + 1} />}
-                        </div>
-                    </Collapse> */}
-                </div>}
-            </div>
-        );
-    }
-
-    const [selectedCategory, setSelectedCategory] = useState(category[0]);
-    const [selectedSubCategory, setSelectedSubCategory] = useState(sub_category[0]);
-    const [selectedSubSubCategory, setSelectedSubSubCategory] = useState(sub_sub_category[0]);
-    const [versions, setVersions] = useState([]);
-    const [versionDocStructure, setVersionDocStructure] = useState(null);
-
     const arr2 = [
         {
             "id": "400e49be-a639-11eb-bcbc-0242ac130002",
@@ -907,19 +811,33 @@ function DocumentTypesRootAll() {
         }
     ]
 
+    const FormObject = ({recursive_objects}) => {
+        return (typeof Object.values(recursive_objects)[0] == 'object' ? Object.keys(recursive_objects).map(k => (
+            <div className="container-form-content">
+                {isNaN(k) && <h6>{k}:</h6>}<br/>
+                <FormObject recursive_objects={recursive_objects[k]}/>
+            </div>
+        )) : Object.keys(recursive_objects).map(k => (
+            <div className="container-form-subcontent">
+                {isNaN(k) && <h6>{k}:</h6>}
+                {isNaN(k) && recursive_objects[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br/><br/><br/>
+            </div>
+        )));
+    }
+
     return (
         <div className="container">
+            {category.length > 0 ?
             <div className="categories">
                 <div className="block">
                     <b>Category</b>
                     <br />
                     <select id="category" name="category" onChange={e => {
                         category.map(c => {
-                            if(c.doc_type == e.target.value) {
+                            if (c.doc_type == e.target.value) {
                                 setSelectedCategory(prevSelectedCategory => {
-                                    return {...prevSelectedCategory, ...c};
+                                    return { ...prevSelectedCategory, ...c };
                                 });
-                                document.getElementById('sub_category').disabled = false;
                             }
                         })
                     }}>
@@ -934,16 +852,15 @@ function DocumentTypesRootAll() {
                     <br />
                     <select id="sub_category" name="sub_category" onChange={e => {
                         sub_category.map(c => {
-                            if(c.doc_type == e.target.value) {
+                            if (c.doc_type == e.target.value) {
                                 setSelectedSubCategory(prevSelectedSubCategory => {
-                                    return {...prevSelectedSubCategory, ...c};
+                                    return { ...prevSelectedSubCategory, ...c };
                                 });
-                                document.getElementById('sub_sub_category').disabled = false;
                             }
                         })
-                    }} disabled={true}>
+                    }}>
                         {sub_category.map(sc => (
-                            <option value={sc.doc_type}>{sc.doc_type}</option>
+                            selectedCategory !== undefined && sc.parent_id == selectedCategory.id && <option value={sc.doc_type}>{sc.doc_type}</option>
                         ))}
                     </select>
                     <br />
@@ -953,22 +870,23 @@ function DocumentTypesRootAll() {
                     <br />
                     <select id="sub_sub_category" name="sub_sub_category" onChange={e => {
                         sub_sub_category.map(c => {
-                            if(c.doc_type == e.target.value) {
+                            if (c.doc_type == e.target.value) {
                                 setSelectedSubSubCategory(prevSelectedSubSubCategory => {
-                                    return {...prevSelectedSubSubCategory, ...c};
+                                    return { ...prevSelectedSubSubCategory, ...c };
                                 });
-                                document.getElementById('versions').disabled = false;
                                 setVersions([]);
                                 arr2.map(a => {
-                                    {a.id == c.id && a.data.map(version => (
-                                        setVersions(OldVersions => [...OldVersions, version])
-                                    ))}
+                                    {
+                                        a.id == c.id && a.data.map(version => (
+                                            setVersions(OldVersions => [...OldVersions, version])
+                                        ))
+                                    }
                                 })
                             }
                         })
-                    }} disabled={true}>
+                    }}>
                         {sub_sub_category.map(ssc => (
-                            <option value={ssc.doc_type}>{ssc.doc_type}</option>
+                            selectedSubCategory !== undefined && ssc.parent_id == selectedSubCategory.id && <option value={ssc.doc_type}>{ssc.doc_type}</option>
                         ))}
                     </select>
                     <br />
@@ -978,11 +896,12 @@ function DocumentTypesRootAll() {
                     <br />
                     <select id="versions" name="versions" onChange={e => {
                         versions.map(v => {
-                            {e.target.value == v.version && 
+                            {
+                                e.target.value == v.version &&
                                 setVersionDocStructure(v.doc_structure)
                             }
                         })
-                    }} disabled={true}>
+                    }}>
                         {versions.map(v => (
                             <option value={v.version}>{v.version}</option>
                         ))}
@@ -990,11 +909,11 @@ function DocumentTypesRootAll() {
                     <br />
                 </div>
                 {versionDocStructure !== undefined && versionDocStructure != null &&
-                <form className="container-form">
-                    <FormObject recursive_objects={versionDocStructure}/>
-                    <input className="submit" type="submit" value="Submit"/><br/><br/>
-                </form>}
-            </div>
+                    <form className="container-form">
+                        <FormObject recursive_objects={versionDocStructure} />
+                        <input className="submit" type="submit" value="Submit" /><br /><br />
+                    </form>}
+            </div> : <h1>Отсутствуют категории</h1>}
         </div>
     );
 }
