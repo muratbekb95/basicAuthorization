@@ -53,6 +53,13 @@ body {
 .dropdown:hover .dropdown-content {
   display: block;
 }
+.container .categories {
+  margin-bottom: 20px;
+}
+.container .categories .block {
+  display: inline-block;
+  margin-right: 20px;
+}
 .app {
   margin: 0 auto;
   font-size: 1.6rem;
@@ -63,21 +70,32 @@ body {
   max-width: 1400px;
   padding: 3rem 1rem 1rem;
 }
-.app .wrap-container .collapse-container {
+.app .collapse-container {
   position: relative;
   left: 0px;
 }
-.app .wrap-container .collapse-container div .app__collapse {
+.app .collapse-container .wrap-container {
+  margin-top: -20px;
+  margin-bottom: 30px;
+}
+.app .collapse-container .wrap-container select {
+  left: -410px;
+  position: relative;
+  width: 300px;
+  background-color: forestgreen;
+  color: white;
+}
+.app .collapse-container .wrap-container .app__collapse {
   width: 100%;
   display: block;
   position: relative;
   overflow: hidden;
   transition: height 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-.app .wrap-container .collapse-container div .app__collapse .app__collapse--gradient .app__content {
+.app .collapse-container .wrap-container .app__collapse .app__collapse--gradient .app__content {
   border-color: transparent;
 }
-.app .wrap-container .collapse-container div .app__collapse .app__collapse--gradient .app__collapse--gradient:after {
+.app .collapse-container .wrap-container .app__collapse .app__collapse--gradient .app__collapse--gradient:after {
   pointer-events: none;
   transition: opacity 300ms;
   will-change: opacity;
@@ -91,10 +109,10 @@ body {
   height: 100%;
   background: linear-gradient(transparent 50%, white);
 }
-.app .wrap-container .collapse-container div .app__collapse .app__collapse--active .app__collapse--active:after {
+.app .collapse-container .wrap-container .app__collapse .app__collapse--active .app__collapse--active:after {
   opacity: 0;
 }
-.app .wrap-container .collapse-container div .app__content {
+.app .collapse-container .wrap-container .app__content {
   border: 1px solid transparent;
   padding: 1rem 0;
   margin-bottom: 3rem;
@@ -103,7 +121,7 @@ body {
   background-color: limegreen;
   width: 600px;
 }
-.app .wrap-container .collapse-container div .app__content .wrap-form {
+.app .collapse-container .wrap-container .app__content .wrap-form {
   display: inline-block;
   padding: 0px 20px;
   margin-right: 20px;
@@ -111,11 +129,11 @@ body {
   left: 20px;
   position: relative;
 }
-.app .wrap-container .collapse-container div .app__content .wrap-form .container-form {
+.app .collapse-container .wrap-container .app__content .wrap-form .container-form {
   top: 20px;
   position: relative;
 }
-.app .wrap-container .collapse-container div .app__toggle {
+.app .collapse-container .wrap-container .app__toggle {
   width: 100%;
   margin: 1rem 0;
   border: 1px solid transparent;
@@ -129,20 +147,20 @@ body {
   background-color: #fff;
   transition: background-color 300ms;
 }
-.app .wrap-container .collapse-container div .app__toggle .app__toggle--active {
+.app .collapse-container .wrap-container .app__toggle .app__toggle--active {
   background-color: #fafafa;
 }
-.app .wrap-container .collapse-container div .app__toggle-text {
+.app .collapse-container .wrap-container .app__toggle-text {
   font-size: inherit;
 }
-.app .wrap-container .collapse-container div .app__button {
+.app .collapse-container .wrap-container .app__button {
   display: block;
   width: 20rem;
   max-width: 100%;
   margin: 0 auto;
   padding: 1rem;
 }
-.app .wrap-container .collapse-container div .app__wrap {
+.app .collapse-container .wrap-container .app__wrap {
   width: 100%;
   max-width: 100%;
   height: auto;

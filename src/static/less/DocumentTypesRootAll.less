@@ -61,6 +61,16 @@ body {
   .dropdown:hover .dropdown-content {
     display: block;
   }
+
+  .container {
+    .categories {
+      margin-bottom: 20px;
+      .block {
+        display: inline-block;
+        margin-right: 20px;
+      }
+    }
+  }
   
   .app {
     margin: 0 auto;
@@ -72,10 +82,22 @@ body {
     max-width: 1400px;
     padding: 3rem 1rem 1rem;
   
-    .wrap-container .collapse-container {
+    .collapse-container {
       position: relative;
       left: 0px;
-      div {
+      .wrap-container {
+        margin-top: -20px;
+        margin-bottom: 30px;
+        select {
+          left: -410px;
+          position: relative;
+          width: 300px;
+          background-color: forestgreen;
+          color: white;
+          option {
+          }
+        }
+
         .app__collapse {
           width: 100%;
           display: block;

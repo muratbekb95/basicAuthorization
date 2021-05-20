@@ -8,11 +8,38 @@ export default function DocumentUpload(props) {
   const { onSubmit } = props;
   const { register, handleSubmit } = useForm();
 
+  // Вызывается при загрузке файла, достаёт "имя" файла
   function fileInputClicked(e) {
     document.getElementById("fileNameFromInputFile").value = e.target.files[0].name;
   }
 
+  // Добавление и удаление аттрибутов
   const [attributes, setAttributes] = useState([]);
+
+  const Attribute = props => {
+    document.getElementById("attrubuteFieldsKey").value = "";
+    document.getElementById("attrubuteFieldsValue").value = "";
+    return (<div className="attribute">
+      <div className="divBlock" style={{display: 'inline-block'}}>
+        <div class="rounded bg-primary text-center" style={{width: 'fit-content', color: 'white', padding: '5px 10px 5px'}}>
+          <p class="d-inline">{attributes[props.id].attrubuteFieldsKey}</p> - <p class="d-inline">{attributes[props.id].attrubuteFieldsValue}</p>
+        </div><br/>
+      </div>
+      <div className="divBlock" style={{marginLeft: 15, top: -30, position: 'relative', display: 'inline-block'}}>
+        <button className="divBlock" class="d-inline" onClick={(e) => { removeAttr(e, props); }}>
+          <i class="fa fa-times " aria-hidden="true"></i>
+        </button><br />
+      </div>
+    </div>);
+  }
+
+  function addAttributeFields(e) {
+    e.preventDefault()
+    setAttributes(attributes => [...attributes, {
+      attrubuteFieldsKey: document.getElementById("attrubuteFieldsKey").value,
+      attrubuteFieldsValue: document.getElementById("attrubuteFieldsValue").value
+    }])
+  }
 
   function removeAttr(e, props) {
     let clone = [...attributes]
@@ -24,30 +51,6 @@ export default function DocumentUpload(props) {
         attrubuteFieldsValue: ""
       })
     }
-  }
-
-  const Attribute = props => {
-    document.getElementById("attrubuteFieldsKey").value = "";
-    document.getElementById("attrubuteFieldsValue").value = "";
-    return (<div>
-      <div class="">
-        <p class="inline-block">{attributes[props.id].attrubuteFieldsKey}</p>
-        <p class="inline-block">{attributes[props.id].attrubuteFieldsValue}</p>
-      </div>
-      <div className="block">
-        <button onClick={(e) => { removeAttr(e, props); }}>
-          <i class="fa fa-times" aria-hidden="true"></i> Удалить атрибут
-        </button><br />
-      </div><br/>
-    </div>);
-  }
-
-  function addAttributeFields(e) {
-    e.preventDefault()
-    setAttributes(attributes => [...attributes, {
-      attrubuteFieldsKey: document.getElementById("attrubuteFieldsKey").value,
-      attrubuteFieldsValue: document.getElementById("attrubuteFieldsValue").value
-    }])
   }
 
   return (
@@ -78,7 +81,7 @@ export default function DocumentUpload(props) {
       </div>
       <div className="selectionOfDocTypeAndAreaOfVisibility">
         <h6>Выбор - Документ типа и область видимости</h6>
-        <input type="text" placeholder="Номер документа"></input>
+        <input type="text" placeholder="Номер документа" id="docNumber"></input>
         {DocumentTypesRootAll()}
       </div>
       <div className="AttributesAppend">
@@ -98,6 +101,30 @@ export default function DocumentUpload(props) {
           </form>
         </div>
       </div>
+      <button class="mb-5" style={{float: 'right'}} onClick={(e) => {
+        document.getElementById("fileNameFromInputFile").value = "";
+
+        var oldInput = document.getElementById("input__file"); 
+        var newInput = document.createElement("input"); 
+        newInput.type = "file"; 
+        newInput.name = oldInput.name;
+        newInput.placeholder = oldInput.placeholder;
+        newInput.id = oldInput.id;
+        newInput.className = oldInput.className;
+        newInput.onchange = oldInput.onchange;
+        newInput.style.cssText = oldInput.style.cssText;
+        oldInput.parentNode.replaceChild(newInput, oldInput); 
+
+        document.getElementById("docNumber").value = "";
+
+        console.log(oldInput.files[0].name)
+        // setAttributes([])
+        // setAttributes({
+        //   attrubuteFieldsKey: "",
+        //   attrubuteFieldsValue: ""
+        // })
+
+      }}>Сбросить настройки</button>
     </div>
   );
 }
