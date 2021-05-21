@@ -127,9 +127,16 @@ function DocumentTypesRootAll() {
         setSubCategory(chainData[1][1])
         setSubSubCategory(chainData[2][2])
 
-        setSelectedCategory(category[0])
-        setSelectedSubCategory(sub_category[0])
-        setSelectedSubSubCategory(sub_sub_category[0])
+        setSelectedCategory(chainData[0][0][0])
+        setSelectedSubCategory(chainData[1][1][0])
+        setSelectedSubSubCategory(chainData[2][2][0])
+
+        console.log("Category:")
+        console.log(chainData[0][0])
+        console.log("Sub-Category:")
+        console.log(chainData[1][1])
+        console.log("Sub-Sub-Category:")
+        console.log(chainData[2][2])
     }
 
     const [selectedCategory, setSelectedCategory] = useState(category[0]);
@@ -398,6 +405,10 @@ function DocumentTypesRootAll() {
                 var finishFiltering = false;
                 var indexCnt = 0;
                 var maxLevel = sorted_chain_of_nodes[0].length;
+
+                sorted_chain_of_nodes.reverse().forEach((node, index) => {
+                    console.log([...node].reverse())
+                });
 
                 var BreakException = {};
                 try {
@@ -834,7 +845,10 @@ function DocumentTypesRootAll() {
                     <br />
                     <select id="category" name="category" onChange={e => {
                         category.map(c => {
-                            if (c.doc_type == e.target.value) {
+                            const str = e.target.value;
+                            var i = str.indexOf(' ');
+                            var another_doc_type = str.substring(0, i)
+                            if (c.doc_type == another_doc_type) {
                                 setSelectedCategory(prevSelectedCategory => {
                                     return { ...prevSelectedCategory, ...c };
                                 });
@@ -842,7 +856,7 @@ function DocumentTypesRootAll() {
                         })
                     }}>
                         {category.map(c => (
-                            <option value={c.doc_type}>{c.doc_type}</option>
+                            <option value={c.doc_type + " " + c.id}>{c.doc_type + " " + c.id}</option>
                         ))}
                     </select>
                     <br />
@@ -852,7 +866,10 @@ function DocumentTypesRootAll() {
                     <br />
                     <select id="sub_category" name="sub_category" onChange={e => {
                         sub_category.map(c => {
-                            if (c.doc_type == e.target.value) {
+                            const str = e.target.value;
+                            var i = str.indexOf(' ');
+                            var another_doc_type = str.substring(0, i)
+                            if (c.doc_type == another_doc_type) {
                                 setSelectedSubCategory(prevSelectedSubCategory => {
                                     return { ...prevSelectedSubCategory, ...c };
                                 });
@@ -860,7 +877,7 @@ function DocumentTypesRootAll() {
                         })
                     }}>
                         {sub_category.map(sc => (
-                            selectedCategory !== undefined && sc.parent_id == selectedCategory.id && <option value={sc.doc_type}>{sc.doc_type}</option>
+                            selectedCategory !== undefined && sc.parent_id == selectedCategory.id && <option value={sc.doc_type + " " + sc.id}>{sc.doc_type + " " + sc.id}</option>
                         ))}
                     </select>
                     <br />
@@ -870,7 +887,10 @@ function DocumentTypesRootAll() {
                     <br />
                     <select id="sub_sub_category" name="sub_sub_category" onChange={e => {
                         sub_sub_category.map(c => {
-                            if (c.doc_type == e.target.value) {
+                            const str = e.target.value;
+                            var i = str.indexOf(' ');
+                            var another_doc_type = str.substring(0, i)
+                            if (c.doc_type == another_doc_type) {
                                 setSelectedSubSubCategory(prevSelectedSubSubCategory => {
                                     return { ...prevSelectedSubSubCategory, ...c };
                                 });
@@ -886,7 +906,7 @@ function DocumentTypesRootAll() {
                         })
                     }}>
                         {sub_sub_category.map(ssc => (
-                            selectedSubCategory !== undefined && ssc.parent_id == selectedSubCategory.id && <option value={ssc.doc_type}>{ssc.doc_type}</option>
+                            selectedSubCategory !== undefined && ssc.parent_id == selectedSubCategory.id && <option value={ssc.doc_type + " " + ssc.id}>{ssc.doc_type + " " + ssc.id}</option>
                         ))}
                     </select>
                     <br />
@@ -897,7 +917,10 @@ function DocumentTypesRootAll() {
                     <select id="versions" name="versions" onChange={e => {
                         versions.map(v => {
                             {
-                                e.target.value == v.version &&
+                                const str = e.target.value;
+                                var i = str.indexOf(' ');
+                                var another_version = str.substring(0, i)
+                                another_version == v.version &&
                                 setVersionDocStructure(v.doc_structure)
                             }
                         })
