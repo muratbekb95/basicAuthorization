@@ -1408,11 +1408,11 @@ function DocumentTypesRootAll() {
         )));
     }
 
-    function clearOptionsInSelect(id) {
-        console.log("CLEAR OPTIONS")
-        console.log(id)
-        console.log(document.getElementById(id))
-        // document.getElementById(id).options.length = 0;
+    function selectZeroIndexByDefaultAndSetVersionDocStructure(vds) {
+        setVersionDocStructure(vds)
+        if(document.getElementById('versions') !== undefined && document.getElementById('versions') != null) {
+            document.getElementById('versions').selectedIndex = 0;
+        }
     }
 
     function setVersionsAndSelectedVersionDocStructure(category) {
@@ -1425,7 +1425,7 @@ function DocumentTypesRootAll() {
                             version.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, version])
                         ))
                         a.data.map((version, index) => (
-                            version.doc_type_id == category.id && index == 0 && setVersionDocStructure(version.doc_structure)
+                            version.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(version.doc_structure)
                         ))
                     }
                     else {
@@ -1435,11 +1435,6 @@ function DocumentTypesRootAll() {
                 }
             })
         }
-    }
-
-    function clearVersionsAndDocStructure() {
-        setVersions([]);
-        setVersionDocStructure(null);
     }
 
     return (
@@ -1571,7 +1566,7 @@ function DocumentTypesRootAll() {
                                 }
                             }}>
                                 {sub_category.map((sc, index) => (
-                                    selectedCategory !== undefined ? sc.parent_id == selectedCategory.id && <option value={sc.doc_type + " " + sc.id}>{sc.doc_type + " " + sc.id}</option> : clearOptionsInSelect('sub_category')
+                                    selectedCategory !== undefined && sc.parent_id == selectedCategory.id && <option value={sc.doc_type + " " + sc.id}>{sc.doc_type + " " + sc.id}</option>
                                 ))}
                             </select> :
                             <select id="sub_category" name="sub_category" disabled></select>}
@@ -1606,7 +1601,7 @@ function DocumentTypesRootAll() {
                                 }
                             }}>
                                 {sub_sub_category.map((ssc, index) => (
-                                    selectedSubCategory !== undefined ? ssc.parent_id == selectedSubCategory.id && <option key={ssc.id} value={ssc.doc_type + " " + ssc.id}>{ssc.doc_type + " " + ssc.id}</option> : clearOptionsInSelect('sub_sub_category')
+                                    selectedSubCategory !== undefined && ssc.parent_id == selectedSubCategory.id && <option key={ssc.id} value={ssc.doc_type + " " + ssc.id}>{ssc.doc_type + " " + ssc.id}</option>
                                 ))}
                             </select> :
                         <select id="sub_sub_category" name="sub_sub_category" disabled></select>}
@@ -1620,7 +1615,7 @@ function DocumentTypesRootAll() {
                                 versions.map(v => {
                                     {
                                         const selected_version = e.target.value;
-                                        selected_version == v.version && setVersionDocStructure(v.doc_structure)
+                                        selected_version == v.version && setVersionDocStructure(Array.from(new Set(recursive(v.doc_structure, []))))
                                     }
                                 })
                             }
