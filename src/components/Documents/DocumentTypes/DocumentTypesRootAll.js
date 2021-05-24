@@ -129,53 +129,51 @@ function DocumentTypesRootAll() {
 
     function setD(chainData) {
         setData(chainData);
-        var selectedCategoryId = 0;
         if(chainData[0][0] !== undefined) {
+            var selectedCategoryElement = null;
             setCategory(chainData[0][0])
             
-            {/*if(chainData[1][1] !== undefined) {
+            if(chainData[1][1] !== undefined) {
                 setSubCategory(chainData[1][1])
             }
             if(chainData[2][2] !== undefined) {
                 setSubSubCategory(chainData[2][2])
-            }*/}
+            }
 
             if(chainData[0][0][0] !== undefined) {
                 setSelectedCategory(chainData[0][0][0])
-                selectedCategoryId = chainData[0][0][0].id;
+                selectedCategoryElement = chainData[0][0][0];
 
                 var BreakException = {};
                 try {
-                    var selectedSubCategoryId = 0;
                     if(chainData[1][1] !== undefined) {
-                        chainData[1][1].forEach((ch, index) => {
-                            if (selectedCategoryId == ch.parent_id) {
-                                setSelectedSubCategory(ch)
-                                selectedSubCategoryId = ch.id;
-                                throw BreakException;
+                        var selectedSubCategoryElement = null;
+                        chainData[1][1].forEach(ch1 => {
+                            if (selectedCategoryElement.id == ch1.parent_id) {
+                                setSelectedSubCategory(ch1)
+                                selectedSubCategoryElement = ch1;
                             }
                         })
 
-                        var selectedSubSubCategoryId = 0;
                         try {
-                            // if(chainData[2][2] !== undefined) {
-                            if(false) {
-                                chainData[2][2].forEach(ch => {
-                                    if (selectedSubCategoryId == ch.parent_id) {
-                                        setSelectedSubSubCategory(ch)
-                                        selectedSubSubCategoryId = ch.id;
+                            if(chainData[2][2] !== undefined) {
+                                var selectedSubSubCategoryElement = null;
+                                chainData[2][2].forEach(ch2 => {
+                                    if (selectedSubCategoryElement.id == ch2.parent_id) {
+                                        setSelectedSubSubCategory(ch2)
+                                        selectedSubSubCategoryElement = ch2;
+                                        setVersionsAndSelectedVersionDocStructure(selectedSubSubCategoryElement);
                                         throw BreakException;
                                     }
                                 })
-                                setVersionsAndSelectedVersionDocStructure(selectedSubSubCategoryId);
                             } else {
-                                setVersionsAndSelectedVersionDocStructure(selectedSubCategoryId)
+                                setVersionsAndSelectedVersionDocStructure(selectedSubCategoryElement)
                             }
                         } catch (e) {
                             if (e !== BreakException) throw e;
                         }
                     } else {
-                        setVersionsAndSelectedVersionDocStructure(selectedCategoryId);
+                        setVersionsAndSelectedVersionDocStructure(selectedCategoryElement);
                     }
                 } catch (e) {
                     if (e !== BreakException) throw e;
@@ -356,6 +354,36 @@ function DocumentTypesRootAll() {
                 deepest_node: true
             },
             {
+                id: "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
+                doc_type: "CREDIT",
+                parent_id: "30c92410-a639-11eb-bcbc-0242ac130002",
+                deepest_node: true
+            },
+            {
+                id: "90850a0a-f2f9-4914-98b3-f7af6cedc0af",
+                doc_type: "CREDIT",
+                parent_id: "076b114a-0e8e-4995-a18e-201521fdedc1",
+                deepest_node: false
+            },
+            {
+                id: "da5e2049-22f8-4fbf-883e-cc547b0804f1",
+                doc_type: "CREDIT",
+                parent_id: "90850a0a-f2f9-4914-98b3-f7af6cedc0af",
+                deepest_node: true
+            },
+            {
+                id: "5e7c1e60-95d3-4ef1-9af6-c9d43e6e6dfc",
+                doc_type: "CREDIT",
+                parent_id: "90850a0a-f2f9-4914-98b3-f7af6cedc0af",
+                deepest_node: true
+            },
+            {
+                id: "8091a08a-a639-11eb-bcbc-0242ac130002",
+                doc_type: "CREDIT",
+                parent_id: "90850a0a-f2f9-4914-98b3-f7af6cedc0af",
+                deepest_node: false
+            },
+            {
                 id: "8091a08a-a639-11eb-bcbc-0242ac130002",
                 doc_type: "INVESTMENT",
                 parent_id: "",
@@ -371,12 +399,6 @@ function DocumentTypesRootAll() {
                 id: "9019c17c-a639-11eb-bcbc-0242ac130002",
                 doc_type: "MORTGAGE",
                 parent_id: "9f25ae26-a66e-11eb-bcbc-0242ac130002",
-                deepest_node: true
-            },
-            {
-                id: "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
-                doc_type: "CREDIT",
-                parent_id: "30c92410-a639-11eb-bcbc-0242ac130002",
                 deepest_node: true
             },
             {
@@ -953,6 +975,100 @@ function DocumentTypesRootAll() {
             ]
         },
         {
+            "id": "da5e2049-22f8-4fbf-883e-cc547b0804f1",
+            "data": [
+                {
+                    "id": "d30b0c2f-2c8d-4443-a056-e220b3cc5273",
+                    "doc_type_id": "da5e2049-22f8-4fbf-883e-cc547b0804f1",
+                    "doc_structure": {
+                        "card_id": "required",
+                        "customer": {
+                            "name": "required",
+                            "surname": "",
+                            "telephone": "required",
+                            "card_id": "required",
+                            "bank": {
+                                "name": "required",
+                                "location": "required",
+                                "telephone": "required",
+                                "fax": "",
+                            },
+                            "currency": "required",
+                        },
+                    },
+                    "version": 1
+                },
+                {
+                    "id": "2153a39b-7b3f-4420-8814-711c1b6d580b",
+                    "doc_type_id": "da5e2049-22f8-4fbf-883e-cc547b0804f1",
+                    "doc_structure": {
+                        "card_id": "required",
+                        "customer": {
+                            "name": "required",
+                            "surname": "",
+                            "telephone": "required",
+                            "card_id": "required",
+                            "bank": {
+                                "name": "required",
+                                "location": "required",
+                                "telephone": "required",
+                                "fax": "",
+                            },
+                            "currency": "required",
+                            "address": {
+                                "city": "required",
+                                "country": "required",
+                                "zip": "required"
+                            }
+                        },
+                    },
+                    "version": 2
+                },
+            ]
+        },
+        {
+            "id": "5e7c1e60-95d3-4ef1-9af6-c9d43e6e6dfc",
+            "data": [
+                {
+                    "id": "16bab4ac-261c-4e9b-b9a8-b3ead9a8bf97",
+                    "doc_type_id": "5e7c1e60-95d3-4ef1-9af6-c9d43e6e6dfc",
+                    "doc_structure": {
+                        "card_id": "required"
+                    },
+                    "version": 1
+                },
+                {
+                    "id": "886c4f0e-f736-40a1-86ce-341c5c1730e5",
+                    "doc_type_id": "5e7c1e60-95d3-4ef1-9af6-c9d43e6e6dfc",
+                    "doc_structure": {
+                        "card_id": "required",
+                        "bank": {
+                            "name": "required",
+                            "location": "required",
+                            "telephone": "required",
+                            "fax": "",
+                        }
+                    },
+                    "version": 2
+                },
+                {
+                    "id": "4e8eb32d-6164-41db-ba52-950c80da485f",
+                    "doc_type_id": "5e7c1e60-95d3-4ef1-9af6-c9d43e6e6dfc",
+                    "doc_structure": {
+                        "card_id": "required",
+                        "bank": {
+                            "name": "required",
+                            "location": "required",
+                            "telephone": "required",
+                            "fax": "",
+                        },
+                        "currency": "required"
+                    },
+                    "version": 3
+                }
+            ]
+        },
+        {
             "id": "772b18b4-a639-11eb-bcbc-0242ac130002",
             "data": [
                 {
@@ -963,6 +1079,68 @@ function DocumentTypesRootAll() {
                     },
                     "version": 1
                 },
+                {
+                    "id": "0f0b43a0-027e-45e0-b468-2e6601d37011",
+                    "doc_type_id": "772b18b4-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "consent": {
+                            "beginDate": "required",
+                            "customer": {
+                                "externalId": "required",
+                                "firstname": "required",
+                                "id": "required",
+                                "iin": "required",
+                                "phone": "required",
+                                "surname": ""
+                            },
+                            "expirationDate": "required",
+                            "id": "required",
+                            "iin": "required",
+                            "initiator": {
+                                "ip": "required",
+                                "system": "required",
+                                "userExternalId": "required",
+                                "userName": "required",
+                                "userSurname": ""
+                            },
+                            "ip": "required",
+                            "location": "required",
+                            "revocationDate": "required",
+                            "terms": {
+                                "activity": "",
+                                "beginDate": "required",
+                                "documentID": "required",
+                                "id": "required",
+                                "partner": {
+                                    "externalId": "required",
+                                    "id": "required",
+                                    "title": "required"
+                                },
+                                "publicLink": "required",
+                                "scope": "required",
+                                "termVersionID": "required",
+                                "version": "required"
+                            },
+                            "type": "required"
+                        },
+                        "image_file_link": "required"
+                    },
+                    "version": 2
+                },
+                {
+                    "id": "a67b3ff0-45e5-4485-9cd9-e463c0f57682",
+                    "doc_type_id": "772b18b4-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "office": {
+                            "officeId": "required",
+                            "title": "required",
+                            "location": "required",
+                            "phone": "required",
+                            "fax": ""
+                        }
+                    },
+                    "version": 3
+                }
             ]
         },
         {
@@ -993,6 +1171,59 @@ function DocumentTypesRootAll() {
                     },
                     "version": 1
                 },
+                {
+                    "id": "55a1ab60-37ed-4005-a79a-3aafdc53a544",
+                    "doc_type_id": "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required",
+                        "expirationDate": "required",
+                        "id": "required",
+                        "initiator": {
+                            "ip": "required",
+                            "system": "required",
+                            "userExternalId": "required",
+                            "userName": "required",
+                            "userSurname": ""
+                        }
+                    },
+                    "version": 2
+                },
+                {
+                    "id": "8642bbbe-cea3-4bb3-9038-ed76f7ab7cb7",
+                    "doc_type_id": "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required",
+                        "expirationDate": "required",
+                        "id": "required",
+                        "initiator": {
+                            "ip": "required",
+                            "system": "required",
+                            "userExternalId": "required",
+                            "userName": "required",
+                            "userSurname": ""
+                        },
+                        "terms": {
+                            "activity": "",
+                            "beginDate": "required",
+                            "documentID": "required",
+                            "id": "required",
+                            "partner": {
+                                "externalId": "required",
+                                "id": "required",
+                                "title": "required"
+                            },
+                            "publicLink": "required",
+                            "scope": "required",
+                            "termVersionID": "required",
+                            "version": "required"
+                        },
+                    },
+                    "version": 3
+                }
             ]
         },
         {
@@ -1060,39 +1291,74 @@ function DocumentTypesRootAll() {
     const [subSubCategoryFound, setSubSubCategoryFound] = useState(false)
 
     function clearOptionsInSelect(id) {
+        console.log("CLEAR OPTIONS")
         console.log(id)
         console.log(document.getElementById(id))
         // document.getElementById(id).options.length = 0;
     }
 
-    function setVersionsAndSelectedVersionDocStructure(id) {
-        var BreakException = {};
-        try {
-            setVersions([]);
-
-            if (arr2.length > 0) {
-                arr2.map(a => {
-                    {
-                        if(a.data.length > 0) {
-                            setVersionDocStructure(a.data[0].doc_structure) 
-                            a.id == id && a.data.map(version => (
-                                setVersions(OldVersions => [...OldVersions, version])
-                            ))
-                            throw BreakException;
-                        }      
+    function setVersionsAndSelectedVersionDocStructure(category) {
+        setVersions([]);
+        if (arr2.length > 0) {
+            arr2.map(a => {
+                if(a.data.length > 0) {
+                    if(category.id !== undefined) {
+                        a.data.map(version => (
+                            version.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, version])
+                        ))
+                        a.data.map((version, index) => (
+                            version.doc_type_id == category.id && index == 0 && setVersionDocStructure(version.doc_structure)
+                        ))
                     }
-                })
-            } else {
-                throw BreakException;
-            }
-        } catch (e) {
-            if (e !== BreakException) throw e;
+                    else {
+                        setVersions([])
+                        setVersionDocStructure(null)
+                    }
+                }
+            })
         }
     }
 
     function clearVersionsAndDocStructure() {
         setVersions([]);
         setVersionDocStructure(null);
+    }
+
+    function disableElement(id, on) {
+        document.getElementById(id).disabled = on
+    }
+
+    // function disableCategory() {
+    //     document.getElementById('category').disabled = true;
+    //     setSelectedCategory(null);
+    // }
+
+    // function disableSubCategory() {
+    //     document.getElementById('sub_category').disabled = true;
+    //     setSelectedSubCategory(null);
+    // }
+
+    // function disableSubSubCategory() {
+    //     document.getElementById('sub_sub_category').disabled = true;
+    //     setSelectedSubSubCategory(null);
+    // }
+
+    async function updateSelectedCategory(newVal) {
+        await setSelectedCategory(prevSelectedCategory => {
+            return { ...prevSelectedCategory, ...newVal };
+        });
+    }
+
+    async function updateSelectedSubCategory(newVal) {
+        await setSelectedSubCategory(prevSelectedSubCategory => {
+            return { ...prevSelectedSubCategory, ...newVal };
+        });
+    }
+
+    async function updateSelectedSubSubCategory(newVal) {
+        await setSelectedSubSubCategory(prevSelectedSubSubCategory => {
+            return { ...prevSelectedSubSubCategory, ...newVal };
+        });
     }
 
     return (
@@ -1106,40 +1372,62 @@ function DocumentTypesRootAll() {
                             category.map(c => {
                                 const str = e.target.value;
                                 var i = str.indexOf(' ');
-                                var another_doc_type = str.substring(0, i)
-                                if (c.doc_type == another_doc_type) {
-                                    setSelectedCategory(prevSelectedCategory => {
-                                        return { ...prevSelectedCategory, ...c };
-                                    });
+                                var selected_doc_type = str.substring(0, i)
+                                if (c.doc_type == selected_doc_type) {
+                                    updateSelectedCategory(c)
                                     if (sub_category.length > 0) {
-                                        document.getElementById('sub_category').disabled = false;
                                         var BreakException = {};
                                         try {
+                                            var foundSubCategory = false;
                                             sub_category.map(sc => {
                                                 if (sc.parent_id == c.id) {
-                                                    setSelectedSubCategory(prevSelectedSubCategory => {
-                                                        return { ...prevSelectedSubCategory, ...sc };
-                                                    });
+                                                    console.log("SUB CATEGORY")
+                                                    foundSubCategory = true;
+                                                    document.getElementById('sub_category').disabled = false;
+                                                    updateSelectedSubCategory(sc)
                                                     if (sub_sub_category.length > 0) {
-                                                        document.getElementById('sub_sub_category').disabled = false;
+                                                        var foundSubSubCategory = false;
                                                         sub_sub_category.map(ssc => {
                                                             if (ssc.parent_id == sc.id) {
-
+                                                                console.log("SUB SUB CATEGORY")
+                                                                foundSubSubCategory = true;
+                                                                document.getElementById('sub_sub_category').disabled = false;
+                                                                updateSelectedSubSubCategory(ssc)
+                                                                setVersionsAndSelectedVersionDocStructure(ssc)
                                                             }
                                                         })
+                                                        if(!foundSubSubCategory) {
+                                                            console.log("NULL for SUB SUB CATEGORY")
+                                                            // disableSubSubCategory();
+                                                            updateSelectedSubSubCategory(null)
+                                                            setVersionsAndSelectedVersionDocStructure(sc)
+                                                        }
+                                                    } else {
+                                                        console.log("NULL for SUB SUB CATEGORY")
+                                                        // disableSubSubCategory();
+                                                        updateSelectedSubSubCategory(null)
+                                                        setVersionsAndSelectedVersionDocStructure(sc)
                                                     }
 
                                                     throw BreakException;
                                                 }
                                             })
+                                            if(!foundSubCategory) {
+                                                console.log("NULL for SUB CATEGORY")
+                                                // disableSubCategory();
+                                                // disableSubSubCategory();
+                                                updateSelectedSubCategory(null)
+                                                setVersionsAndSelectedVersionDocStructure(c)
+                                            }
                                         } catch (e) {
                                             if (e !== BreakException) throw e;
                                         }
                                     } else {
-                                        document.getElementById('sub_category').disabled = true;
-                                        document.getElementById('sub_sub_category').disabled = true;
-                                        setSelectedSubCategory(null);
-                                        setSelectedSubSubCategory(null);
+                                        console.log("NULL for SUB CATEGORY")
+                                        // disableSubCategory();
+                                        // disableSubSubCategory();
+                                        updateSelectedSubCategory(null)
+                                        updateSelectedSubSubCategory(null)
                                         setVersionsAndSelectedVersionDocStructure(c)
                                     }
                                 }
@@ -1155,48 +1443,50 @@ function DocumentTypesRootAll() {
                         <b>Sub-Category</b>
                         <br />
                         <select id="sub_category" name="sub_category" onChange={e => {
+                            var foundSubCategory = false;
                             sub_category.map(sc => {
                                 const str = e.target.value;
                                 var i = str.indexOf(' ');
-                                var another_doc_type = str.substring(0, i)
-                                if (sc.doc_type == another_doc_type) {
-                                    setSelectedSubCategory(prevSelectedSubCategory => {
-                                        return { ...prevSelectedSubCategory, ...sc };
-                                    });
+                                var selected_doc_type = str.substring(0, i)
+                                if (sc.doc_type == selected_doc_type) {
+                                    updateSelectedSubCategory(sc)
+                                    foundSubCategory = true;
                                     if (sub_sub_category.length > 0) {
                                         var BreakException = {};
                                         try {
+                                            var foundSubSubCategory = false;
                                             sub_sub_category.map(ssc => {
                                                 if (ssc.parent_id == sc.id) {
-                                                    setVersions([]);
-                                                    arr2.map(a => {
-                                                        {
-                                                            a.id == ssc.id && a.data.map(version => (
-                                                                setVersions(OldVersions => [...OldVersions, version])
-                                                            ))
-                                                        }
-                                                    })
-
-                                                    if (arr2.length > 0) {
-                                                        arr2.forEach(a => {
-                                                            a.id == ssc.id && a.data.length > 0 && setVersionDocStructure(a.ata[0].doc_structure)
-                                                            throw BreakException;
-                                                        })
-                                                    } else {
-                                                        throw BreakException;
-                                                    }
+                                                    console.log("SUB SUB CATEGORY")
+                                                    foundSubSubCategory = true;
+                                                    document.getElementById('sub_sub_category').disabled = false;
+                                                    updateSelectedSubSubCategory(ssc)
+                                                    setVersionsAndSelectedVersionDocStructure(ssc)
                                                 }
                                             })
+                                            if(!foundSubSubCategory) {
+                                                console.log("NULL for SUB SUB CATEGORY")
+                                                // disableSubSubCategory();
+                                                updateSelectedSubSubCategory(null)
+                                                setVersionsAndSelectedVersionDocStructure(sc)
+                                            }
                                         } catch (e) {
                                             if (e !== BreakException) throw e;
                                         }
                                     } else {
-                                        setSelectedSubSubCategory(null);
+                                        console.log("NULL for SUB SUB CATEGORY")
+                                        updateSelectedSubSubCategory(null)
                                         setVersions([]);
                                         setVersionDocStructure(null);
+                                        setVersionsAndSelectedVersionDocStructure(sc)
                                     }
                                 }
                             })
+                            if(!foundSubCategory) {
+                                updateSelectedSubCategory(null)
+                                updateSelectedSubSubCategory(null)
+                                setVersionsAndSelectedVersionDocStructure(selectedCategory)
+                            }
                         }}>
                             {sub_category.map((sc, index) => (
                                 selectedCategory !== undefined ? sc.parent_id == selectedCategory.id && <option value={sc.doc_type + " " + sc.id}>{sc.doc_type + " " + sc.id}</option> : clearOptionsInSelect('sub_category')
@@ -1208,31 +1498,27 @@ function DocumentTypesRootAll() {
                         <b>Sub-Sub-Category</b>
                         <br />
                         <select id="sub_sub_category" name="sub_sub_category" onChange={e => {
-                            sub_sub_category.map(c => {
+                            var foundSubSubCategory = false;
+                            sub_sub_category.map(ssc => {
                                 const str = e.target.value;
                                 var i = str.indexOf(' ');
-                                var another_doc_type = str.substring(0, i)
-                                if (c.doc_type == another_doc_type) {
-                                    setSelectedSubSubCategory(prevSelectedSubSubCategory => {
-                                        return { ...prevSelectedSubSubCategory, ...c };
-                                    });
-                                    setVersions([]);
-                                    arr2.map(a => {
-                                        {
-                                            a.id == c.id && a.data.map(version => (
-                                                setVersions(OldVersions => [...OldVersions, version])
-                                            ))
-                                        }
-                                    })
+                                var selected_doc_type = str.substring(0, i)
+                                if (ssc.doc_type == selected_doc_type) {
+                                    console.log("Selected")
+                                    console.log(ssc)
+                                    foundSubSubCategory = true;
+                                    updateSelectedSubSubCategory(ssc)
+                                    setVersionsAndSelectedVersionDocStructure(ssc)
                                 }
                             })
+                            if(!foundSubSubCategory) {
+                                updateSelectedSubSubCategory(null)
+                                setVersionsAndSelectedVersionDocStructure(selectedSubCategory)
+                            }
                         }}>
                             {sub_sub_category.map((ssc, index) => (
                                 selectedSubCategory !== undefined ? ssc.parent_id == selectedSubCategory.id && <option value={ssc.doc_type + " " + ssc.id}>{ssc.doc_type + " " + ssc.id}</option> : clearOptionsInSelect('sub_sub_category')
                             ))}
-                            {console.log(selectedCategory)}
-                            {console.log(selectedSubCategory)}
-                            {console.log(selectedSubSubCategory)}
                         </select>
                         <br />
                     </div>
@@ -1240,14 +1526,16 @@ function DocumentTypesRootAll() {
                         <b>Versions</b>
                         <br />
                         <select id="versions" name="versions" onChange={e => {
-                            versions.map(v => {
-                                {
-                                    const str = e.target.value;
-                                    var i = str.indexOf(' ');
-                                    var another_version = str.substring(0, i)
-                                    another_version == v.version && setVersionDocStructure(v.doc_structure)
-                                }
-                            })
+                            if(selectedSubSubCategory !== undefined) {
+                                console.log(selectedSubSubCategory)
+                                setVersionsAndSelectedVersionDocStructure(selectedSubSubCategory)
+                                versions.map(v => {
+                                    {
+                                        const selected_version = e.target.value;
+                                        selected_version == v.version && setVersionDocStructure(v.doc_structure)
+                                    }
+                                })
+                            }
                         }}>
                             {versions.map(v => (
                                 <option value={v.version}>{v.version}</option>
