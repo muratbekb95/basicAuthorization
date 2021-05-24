@@ -11,8 +11,8 @@ import DocumentSearch from './DocumentSearch/DocumentSearch';
 
 export default function DocumentEditor() {
 
-    const usernameString = sessionStorage.getItem('username');
-    const userUsername = JSON.parse(usernameString);
+    const loginString = sessionStorage.getItem('login');
+    const userLogin = JSON.parse(loginString);
 
     const geoString = sessionStorage.getItem('geo');
     const geo = JSON.parse(geoString);
@@ -48,8 +48,8 @@ export default function DocumentEditor() {
                             ))}
                         </select>
                     </div>}
-                    {userUsername != null &&
-                    <p class="lead">{userUsername}</p>}
+                    {userLogin != null &&
+                    <p class="lead">{userLogin}</p>}
                 </div>
             </nav>
             <br/>

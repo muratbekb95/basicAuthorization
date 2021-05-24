@@ -12,8 +12,8 @@ async function loginUser(credentials) {
   })
 }
 
-export default function Login({ setToken, setGeo }) {
-  const [username, setUserName] = useState();
+export default function Login({ setToken, setGeo, setLogin }) {
+  const [username, setUsername] = useState();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -23,7 +23,7 @@ export default function Login({ setToken, setGeo }) {
     const r = token.json().then(function(result) {
       setGeo(result.geo);
       setToken(token.headers.get('Authorization'));
-      sessionStorage.setItem('username', JSON.stringify(username));
+      setLogin(username)
     });
   }
 
@@ -33,7 +33,7 @@ export default function Login({ setToken, setGeo }) {
       <form onSubmit={handleSubmit}>
         <label>
           <p>Username</p>
-          <input type="text" required="required" onChange={e => setUserName(e.target.value)}/>
+          <input type="text" required="required" onChange={e => setUsername(e.target.value)}/>
         </label>
         <div>
           <button type="submit">Submit</button>
@@ -45,5 +45,6 @@ export default function Login({ setToken, setGeo }) {
 
 Login.propTypes = {
   setToken: PropTypes.func.isRequired,
-  setGeo: PropTypes.func.isRequired
+  setGeo: PropTypes.func.isRequired,
+  setLogin: PropTypes.func.isRequired,
 }

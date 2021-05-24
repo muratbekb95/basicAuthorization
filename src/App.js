@@ -23,6 +23,7 @@ import Search from './components/Documents/Search';
 import DownloadUpload from './components/Documents/DownloadUpload';
 import useToken from './useToken';
 import useGeo from './useGeo';
+import useLogin from './useLogin';
 
 import { Redirect } from "react-router-dom";
 
@@ -30,9 +31,10 @@ function App() {
 
   const { token, setToken } = useToken();
   const { geo, setGeo } = useGeo();
+  const {login, setLogin} = useLogin();
 
-  if(!token && !geo) {
-    return <Login setToken={setToken} setGeo={setGeo} />;
+  if(!token && !geo && !login) {
+    return <Login setToken={setToken} setGeo={setGeo} setLogin={setLogin} />;
   }
 
   return (

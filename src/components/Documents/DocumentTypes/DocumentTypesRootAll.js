@@ -127,6 +127,29 @@ function DocumentTypesRootAll() {
     const [versions, setVersions] = useState([]);
     const [versionDocStructure, setVersionDocStructure] = useState(null);
 
+    const [subCategoryFound, setSubCategoryFound] = useState(false)
+    const [subSubCategoryFound, setSubSubCategoryFound] = useState(false)
+
+    async function updateSelectedCategory(newVal) {
+        await setSelectedCategory(newVal);
+    }
+
+    async function updateSelectedSubCategory(newVal) {
+        await setSelectedSubCategory(newVal);
+    }
+
+    async function updateSelectedSubSubCategory(newVal) {
+        await setSelectedSubSubCategory(newVal);
+    }
+
+    async function updateSubCategoryFound(newVal) {
+        await setSubCategoryFound(newVal);
+    }
+
+    async function updateSubSubCategoryFound(newVal) {
+        await setSubSubCategoryFound(newVal);
+    }
+
     function setD(chainData) {
         setData(chainData);
         if(chainData[0][0] !== undefined) {
@@ -141,16 +164,16 @@ function DocumentTypesRootAll() {
             }
 
             if(chainData[0][0][0] !== undefined) {
-                setSelectedCategory(chainData[0][0][0])
+                updateSelectedCategory(chainData[0][0][0])
                 selectedCategoryElement = chainData[0][0][0];
-
                 var BreakException = {};
                 try {
                     if(chainData[1][1] !== undefined) {
                         var selectedSubCategoryElement = null;
                         chainData[1][1].forEach(ch1 => {
                             if (selectedCategoryElement.id == ch1.parent_id) {
-                                setSelectedSubCategory(ch1)
+                                updateSelectedSubCategory(ch1)
+                                updateSubCategoryFound(true)
                                 selectedSubCategoryElement = ch1;
                             }
                         })
@@ -160,7 +183,8 @@ function DocumentTypesRootAll() {
                                 var selectedSubSubCategoryElement = null;
                                 chainData[2][2].forEach(ch2 => {
                                     if (selectedSubCategoryElement.id == ch2.parent_id) {
-                                        setSelectedSubSubCategory(ch2)
+                                        updateSelectedSubSubCategory(ch2)
+                                        updateSubSubCategoryFound(true)
                                         selectedSubSubCategoryElement = ch2;
                                         setVersionsAndSelectedVersionDocStructure(selectedSubSubCategoryElement);
                                         throw BreakException;
@@ -396,6 +420,18 @@ function DocumentTypesRootAll() {
                 deepest_node: false
             },
             {
+                id: "5eaeebda-bc78-11eb-8529-0242ac130003",
+                doc_type: "SHARE",
+                parent_id: "8512f370-a639-11eb-bcbc-0242ac130002",
+                deepest_node: true
+            },
+            {
+                id: "641b2804-bc78-11eb-8529-0242ac130003",
+                doc_type: "SHARE",
+                parent_id: "8512f370-a639-11eb-bcbc-0242ac130002",
+                deepest_node: true
+            },
+            {
                 id: "9019c17c-a639-11eb-bcbc-0242ac130002",
                 doc_type: "MORTGAGE",
                 parent_id: "9f25ae26-a66e-11eb-bcbc-0242ac130002",
@@ -493,7 +529,7 @@ function DocumentTypesRootAll() {
                 var maxLevel = sorted_chain_of_nodes[0].length;
 
                 sorted_chain_of_nodes.reverse().forEach((node, index) => {
-                    console.log([...node].reverse())
+                    [...node].reverse()
                 });
 
                 var BreakException = {};
@@ -743,6 +779,65 @@ function DocumentTypesRootAll() {
 
     const arr2 = [
         {
+            "id": "5eaeebda-bc78-11eb-8529-0242ac130003",
+            "data": [
+                {
+                    "id": "ae8896ba-bc78-11eb-8529-0242ac130003",
+                    "doc_type_id": "5eaeebda-bc78-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "id": "required",
+                        "title": "required"
+                    },
+                    "version": 1
+                },
+                {
+                    "id": "b8b5edd6-bc78-11eb-8529-0242ac130003",
+                    "doc_type_id": "5eaeebda-bc78-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "id": "required",
+                        "title": "required",
+                        "bin": "required",
+                        "bank": {
+                            "id": "required",
+                            "title": "required",
+                            "location": "required"
+                        }
+                    },
+                    "version": 2
+                },
+            ]
+        },
+        {
+            "id": "641b2804-bc78-11eb-8529-0242ac130003",
+            "data": [
+                {
+                    "id": "e8e44d0e-bc78-11eb-8529-0242ac130003",
+                    "doc_type_id": "641b2804-bc78-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "id": "required",
+                        "currency": "required",
+                        "bin": "required"
+                    },
+                    "version": 1
+                },
+                {
+                    "id": "ed6aad96-bc78-11eb-8529-0242ac130003",
+                    "doc_type_id": "641b2804-bc78-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "id": "required",
+                        "currency": "required",
+                        "bin": "required",
+                        "customer": {
+                            "name": "required",
+                            "last_name": "",
+                            "id": "required"
+                        }
+                    },
+                    "version": 2
+                },
+            ]
+        },
+        {
             "id": "cbbc7a60-ba18-11eb-8529-0242ac130003",
             "data": [
                 {
@@ -971,6 +1066,32 @@ function DocumentTypesRootAll() {
                         }
                     },
                     "version": 3
+                }
+            ]
+        },
+        {
+            "id": "8091a08a-a639-11eb-bcbc-0242ac130002",
+            "data": [
+                {
+                    "id": "e098893c-bc67-11eb-8529-0242ac130003",
+                    "doc_type_id": "8091a08a-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "card_id": "required",
+                        "customer": {
+                            "name": "required",
+                            "surname": "",
+                            "telephone": "required",
+                            "card_id": "required",
+                            "bank": {
+                                "name": "required",
+                                "location": "required",
+                                "telephone": "required",
+                                "fax": "",
+                            },
+                            "currency": "required",
+                        },
+                    },
+                    "version": 1
                 }
             ]
         },
@@ -1287,9 +1408,6 @@ function DocumentTypesRootAll() {
         )));
     }
 
-    const [subCategoryFound, setSubCategoryFound] = useState(false)
-    const [subSubCategoryFound, setSubSubCategoryFound] = useState(false)
-
     function clearOptionsInSelect(id) {
         console.log("CLEAR OPTIONS")
         console.log(id)
@@ -1324,43 +1442,6 @@ function DocumentTypesRootAll() {
         setVersionDocStructure(null);
     }
 
-    function disableElement(id, on) {
-        document.getElementById(id).disabled = on
-    }
-
-    // function disableCategory() {
-    //     document.getElementById('category').disabled = true;
-    //     setSelectedCategory(null);
-    // }
-
-    // function disableSubCategory() {
-    //     document.getElementById('sub_category').disabled = true;
-    //     setSelectedSubCategory(null);
-    // }
-
-    // function disableSubSubCategory() {
-    //     document.getElementById('sub_sub_category').disabled = true;
-    //     setSelectedSubSubCategory(null);
-    // }
-
-    async function updateSelectedCategory(newVal) {
-        await setSelectedCategory(prevSelectedCategory => {
-            return { ...prevSelectedCategory, ...newVal };
-        });
-    }
-
-    async function updateSelectedSubCategory(newVal) {
-        await setSelectedSubCategory(prevSelectedSubCategory => {
-            return { ...prevSelectedSubCategory, ...newVal };
-        });
-    }
-
-    async function updateSelectedSubSubCategory(newVal) {
-        await setSelectedSubSubCategory(prevSelectedSubSubCategory => {
-            return { ...prevSelectedSubSubCategory, ...newVal };
-        });
-    }
-
     return (
         <div className="container">
             {category.length > 0 ?
@@ -1381,31 +1462,27 @@ function DocumentTypesRootAll() {
                                             var foundSubCategory = false;
                                             sub_category.map(sc => {
                                                 if (sc.parent_id == c.id) {
-                                                    console.log("SUB CATEGORY")
                                                     foundSubCategory = true;
-                                                    document.getElementById('sub_category').disabled = false;
                                                     updateSelectedSubCategory(sc)
+                                                    updateSubCategoryFound(true)
                                                     if (sub_sub_category.length > 0) {
                                                         var foundSubSubCategory = false;
                                                         sub_sub_category.map(ssc => {
                                                             if (ssc.parent_id == sc.id) {
-                                                                console.log("SUB SUB CATEGORY")
                                                                 foundSubSubCategory = true;
-                                                                document.getElementById('sub_sub_category').disabled = false;
                                                                 updateSelectedSubSubCategory(ssc)
+                                                                updateSubSubCategoryFound(true)
                                                                 setVersionsAndSelectedVersionDocStructure(ssc)
                                                             }
                                                         })
                                                         if(!foundSubSubCategory) {
-                                                            console.log("NULL for SUB SUB CATEGORY")
-                                                            // disableSubSubCategory();
                                                             updateSelectedSubSubCategory(null)
+                                                            updateSubSubCategoryFound(false)
                                                             setVersionsAndSelectedVersionDocStructure(sc)
                                                         }
                                                     } else {
-                                                        console.log("NULL for SUB SUB CATEGORY")
-                                                        // disableSubSubCategory();
                                                         updateSelectedSubSubCategory(null)
+                                                        updateSubSubCategoryFound(false)
                                                         setVersionsAndSelectedVersionDocStructure(sc)
                                                     }
 
@@ -1413,19 +1490,18 @@ function DocumentTypesRootAll() {
                                                 }
                                             })
                                             if(!foundSubCategory) {
-                                                console.log("NULL for SUB CATEGORY")
-                                                // disableSubCategory();
-                                                // disableSubSubCategory();
+                                                updateSubCategoryFound(false)
+                                                updateSubSubCategoryFound(false)
                                                 updateSelectedSubCategory(null)
+                                                updateSelectedSubSubCategory(null)
                                                 setVersionsAndSelectedVersionDocStructure(c)
                                             }
                                         } catch (e) {
                                             if (e !== BreakException) throw e;
                                         }
                                     } else {
-                                        console.log("NULL for SUB CATEGORY")
-                                        // disableSubCategory();
-                                        // disableSubSubCategory();
+                                        updateSubCategoryFound(false)
+                                        updateSubSubCategoryFound(false)
                                         updateSelectedSubCategory(null)
                                         updateSelectedSubSubCategory(null)
                                         setVersionsAndSelectedVersionDocStructure(c)
@@ -1442,93 +1518,105 @@ function DocumentTypesRootAll() {
                     <div className="block">
                         <b>Sub-Category</b>
                         <br />
-                        <select id="sub_category" name="sub_category" onChange={e => {
-                            var foundSubCategory = false;
-                            sub_category.map(sc => {
-                                const str = e.target.value;
-                                var i = str.indexOf(' ');
-                                var selected_doc_type = str.substring(0, i)
-                                if (sc.doc_type == selected_doc_type) {
-                                    updateSelectedSubCategory(sc)
-                                    foundSubCategory = true;
-                                    if (sub_sub_category.length > 0) {
-                                        var BreakException = {};
-                                        try {
-                                            var foundSubSubCategory = false;
-                                            sub_sub_category.map(ssc => {
-                                                if (ssc.parent_id == sc.id) {
-                                                    console.log("SUB SUB CATEGORY")
-                                                    foundSubSubCategory = true;
-                                                    document.getElementById('sub_sub_category').disabled = false;
-                                                    updateSelectedSubSubCategory(ssc)
-                                                    setVersionsAndSelectedVersionDocStructure(ssc)
+                        {subCategoryFound ? 
+                            <select id="sub_category" name="sub_category" onChange={e => {
+                                var foundSubCategory = false;
+                                sub_category.map(sc => {
+                                    const str = e.target.value;
+                                    var i = str.indexOf(' ');
+                                    var selected_doc_type = str.substring(0, i)
+                                    if (sc.doc_type == selected_doc_type) {
+                                        const selectedOptionStr = e.target.selectedOptions[0].value
+                                        var i = selectedOptionStr.indexOf(' ');
+                                        var selectedOptionId = selectedOptionStr.substring(i+1, selectedOptionStr.length)
+                                        if(sc.id == selectedOptionId) {
+                                            updateSubCategoryFound(true)
+                                            updateSelectedSubCategory(sc)
+                                            foundSubCategory = true;
+                                            if (sub_sub_category.length > 0) {
+                                                var BreakException = {};
+                                                try {
+                                                    var foundSubSubCategory = false;
+                                                    sub_sub_category.map(ssc => {
+                                                        if (ssc.parent_id == sc.id) {
+                                                            updateSubSubCategoryFound(true)
+                                                            foundSubSubCategory = true;
+                                                            updateSelectedSubSubCategory(ssc)
+                                                            setVersionsAndSelectedVersionDocStructure(ssc)
+                                                        }
+                                                    })
+                                                    if(!foundSubSubCategory) {
+                                                        updateSubSubCategoryFound(false)
+                                                        updateSelectedSubSubCategory(null)
+                                                        setVersionsAndSelectedVersionDocStructure(sc)
+                                                    }
+                                                } catch (e) {
+                                                    if (e !== BreakException) throw e;
                                                 }
-                                            })
-                                            if(!foundSubSubCategory) {
-                                                console.log("NULL for SUB SUB CATEGORY")
-                                                // disableSubSubCategory();
+                                            } else {
+                                                updateSubSubCategoryFound(false)
                                                 updateSelectedSubSubCategory(null)
+                                                setVersionDocStructure(null);
                                                 setVersionsAndSelectedVersionDocStructure(sc)
                                             }
-                                        } catch (e) {
-                                            if (e !== BreakException) throw e;
                                         }
-                                    } else {
-                                        console.log("NULL for SUB SUB CATEGORY")
-                                        updateSelectedSubSubCategory(null)
-                                        setVersions([]);
-                                        setVersionDocStructure(null);
-                                        setVersionsAndSelectedVersionDocStructure(sc)
                                     }
+                                })
+                                if(!foundSubCategory) {
+                                    updateSubCategoryFound(false)
+                                    updateSubSubCategoryFound(false)
+                                    updateSelectedSubCategory(null)
+                                    updateSelectedSubSubCategory(null)
+                                    setVersionsAndSelectedVersionDocStructure(selectedCategory)
                                 }
-                            })
-                            if(!foundSubCategory) {
-                                updateSelectedSubCategory(null)
-                                updateSelectedSubSubCategory(null)
-                                setVersionsAndSelectedVersionDocStructure(selectedCategory)
-                            }
-                        }}>
-                            {sub_category.map((sc, index) => (
-                                selectedCategory !== undefined ? sc.parent_id == selectedCategory.id && <option value={sc.doc_type + " " + sc.id}>{sc.doc_type + " " + sc.id}</option> : clearOptionsInSelect('sub_category')
-                            ))}
-                        </select>
+                            }}>
+                                {sub_category.map((sc, index) => (
+                                    selectedCategory !== undefined ? sc.parent_id == selectedCategory.id && <option value={sc.doc_type + " " + sc.id}>{sc.doc_type + " " + sc.id}</option> : clearOptionsInSelect('sub_category')
+                                ))}
+                            </select> :
+                            <select id="sub_category" name="sub_category" disabled></select>}
                         <br />
                     </div>
                     <div className="block">
                         <b>Sub-Sub-Category</b>
                         <br />
-                        <select id="sub_sub_category" name="sub_sub_category" onChange={e => {
-                            var foundSubSubCategory = false;
-                            sub_sub_category.map(ssc => {
-                                const str = e.target.value;
-                                var i = str.indexOf(' ');
-                                var selected_doc_type = str.substring(0, i)
-                                if (ssc.doc_type == selected_doc_type) {
-                                    console.log("Selected")
-                                    console.log(ssc)
-                                    foundSubSubCategory = true;
-                                    updateSelectedSubSubCategory(ssc)
-                                    setVersionsAndSelectedVersionDocStructure(ssc)
+                        {subSubCategoryFound ? 
+                            <select id="sub_sub_category" name="sub_sub_category" onChange={e => {
+                                var foundSubSubCategory = false;
+                                sub_sub_category.map(ssc => {
+                                    const str = e.target.value;
+                                    var i = str.indexOf(' ');
+                                    var selected_doc_type = str.substring(0, i)
+                                    if (ssc.doc_type == selected_doc_type) {
+                                        const selectedOptionStr = e.target.selectedOptions[0].value
+                                        var i = selectedOptionStr.indexOf(' ');
+                                        var selectedOptionId = selectedOptionStr.substring(i+1, selectedOptionStr.length)
+                                        if(ssc.id == selectedOptionId) {
+                                            updateSubSubCategoryFound(true)
+                                            foundSubSubCategory = true;
+                                            updateSelectedSubSubCategory(ssc)
+                                            setVersionsAndSelectedVersionDocStructure(ssc)
+                                        }
+                                    }
+                                })
+                                if(!foundSubSubCategory) {
+                                    updateSubSubCategoryFound(false)
+                                    updateSelectedSubSubCategory(null)
+                                    setVersionsAndSelectedVersionDocStructure(selectedSubCategory)
                                 }
-                            })
-                            if(!foundSubSubCategory) {
-                                updateSelectedSubSubCategory(null)
-                                setVersionsAndSelectedVersionDocStructure(selectedSubCategory)
-                            }
-                        }}>
-                            {sub_sub_category.map((ssc, index) => (
-                                selectedSubCategory !== undefined ? ssc.parent_id == selectedSubCategory.id && <option value={ssc.doc_type + " " + ssc.id}>{ssc.doc_type + " " + ssc.id}</option> : clearOptionsInSelect('sub_sub_category')
-                            ))}
-                        </select>
+                            }}>
+                                {sub_sub_category.map((ssc, index) => (
+                                    selectedSubCategory !== undefined ? ssc.parent_id == selectedSubCategory.id && <option key={ssc.id} value={ssc.doc_type + " " + ssc.id}>{ssc.doc_type + " " + ssc.id}</option> : clearOptionsInSelect('sub_sub_category')
+                                ))}
+                            </select> :
+                        <select id="sub_sub_category" name="sub_sub_category" disabled></select>}
                         <br />
                     </div>
                     <div className="block">
                         <b>Versions</b>
                         <br />
                         <select id="versions" name="versions" onChange={e => {
-                            if(selectedSubSubCategory !== undefined) {
-                                console.log(selectedSubSubCategory)
-                                setVersionsAndSelectedVersionDocStructure(selectedSubSubCategory)
+                            if(subCategoryFound || subSubCategoryFound || (category.length > 0 && !subCategoryFound && !subSubCategoryFound)) {
                                 versions.map(v => {
                                     {
                                         const selected_version = e.target.value;
