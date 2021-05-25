@@ -3,8 +3,6 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import './App.css';
 import Login from './components/Login/Login';
-import Dashboard from './components/Dashboard/Dashboard';
-import Preferences from './components/Documents/DocumentEditor/DocumentUpload/DocumentUpload';
 import DocumentEditor from './components/Documents/DocumentEditor/DocumentEditor'
 
 import DocumentTypes from './components/Documents/DocumentTypes/DocumentTypes';
@@ -19,8 +17,6 @@ import FindAllWithConditions from './components/Documents/Metadata/FindAllWithCo
 import GetFileMetadata from './components/Documents/Metadata/GetFileMetadata';
 import FindAll from './components/Documents/Metadata/FindAll';
 
-import Search from './components/Documents/Search';
-import DownloadUpload from './components/Documents/DownloadUpload';
 import useToken from './useToken';
 import useGeo from './useGeo';
 import useLogin from './useLogin';
@@ -44,12 +40,6 @@ function App() {
         <Switch>
           <Route exact path="/">
             {<Redirect to="/document-editor" />}
-          </Route>
-          <Route path="/dashboard">
-            <Dashboard />
-          </Route>
-          <Route path="/preferences">
-            <Preferences />
           </Route>
 
           <Route path="/document-types/root/all">
@@ -86,12 +76,6 @@ function App() {
 
           <Route path="/document-editor">
             <DocumentEditor />
-          </Route>
-          <Route path="/search">
-            <Search />
-          </Route>
-          <Route path="/download-upload">
-            <DownloadUpload />
           </Route>
         </Switch>
       </BrowserRouter>

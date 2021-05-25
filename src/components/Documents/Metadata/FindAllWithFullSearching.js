@@ -2,16 +2,17 @@
 
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
+import useCurrentGeo from '../../../useCurrentGeo';
 import _ from 'lodash';
 
 async function findAllMetadataWithFullSearching(credentials) {
     var arr = credentials.searchParam.split(/[ ,]+/);
-    // console.log(arr)
-    return fetch('http://localhost:9090/metadata/search/full', {
+    return fetch('http://metadata-haos.apps.ocp-t.sberbank.kz/metadata/search/full', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': credentials.token
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo
         },
         body: JSON.stringify(arr)
     }).then(r=>r.json())
@@ -19,11 +20,12 @@ async function findAllMetadataWithFullSearching(credentials) {
 
 function FindAllWithFullSearching() {
     const { token, setToken } = useToken();
-    const [data, setData] = useState([]);
+    const { currentGeo, setCurrentGeo } = useCurrentGeo();
 
     async function Exec(searchParam) {
         return await findAllMetadataWithFullSearching({
             token,
+            currentGeo,
             searchParam
         });
     }

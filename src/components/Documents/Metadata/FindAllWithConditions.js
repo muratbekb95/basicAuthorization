@@ -2,15 +2,16 @@
 
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
+import useCurrentGeo from '../../../useCurrentGeo';
 import _ from 'lodash';
 
 async function findAllMetadataWithConditions(credentials) {
-    return fetch('http://localhost:9090/metadata/search', {
+    return fetch('http://metadata-haos.apps.ocp-t.sberbank.kz/metadata/search', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': credentials.token,
-            'Access-Control-Allow-Origin': "*"
+            'Geo': credentials.currentGeo
         },
         body: JSON.stringify(JSON.stringify(credentials.metadata))
     }).then(r=>r.json())
@@ -18,11 +19,12 @@ async function findAllMetadataWithConditions(credentials) {
 
 function FindAllWithConditions() {
     const { token, setToken } = useToken();
-    const [data, setData] = useState([]);
+    const { currentGeo, setCurrentGeo } = useCurrentGeo();
 
     async function Exec(metadata) {
         return await findAllMetadataWithConditions({
             token,
+            currentGeo,
             metadata
         });
     }

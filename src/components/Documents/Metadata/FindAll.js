@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
+import useCurrentGeo from '../../../useCurrentGeo';
 import _ from 'lodash';
 
 async function findAllMetadata(credentials) {
-    return fetch('http://localhost:9090/metadata', {
+    return fetch('http://metadata-haos.apps.ocp-t.sberbank.kz/metadata', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': credentials.token
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo
         }
     }).then(r=>r.json())
 }
 
 function FindAll() {
     const { token, setToken } = useToken();
-    const [data, setData] = useState([]);
+    const { currentGeo, setCurrentGeo } = useCurrentGeo();
 
     async function Exec() {
         return await findAllMetadata({
-            token
+            token,
+            currentGeo
         });
     }
 

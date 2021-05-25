@@ -2,16 +2,18 @@
 
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
+import useCurrentGeo from '../../../useCurrentGeo';
 import _ from 'lodash';
 
 async function findAllMetadataWithTextSearching(credentials) {
     var arr = credentials.searchParam.split(/[ ,]+/);
     console.log(arr)
-    return fetch('http://localhost:9090/metadata/search/text', {
+    return fetch('http://metadata-haos.apps.ocp-t.sberbank.kz/metadata/search/text', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': credentials.token
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo
         },
         body: JSON.stringify(arr)
     }).then(r=>r.json())
@@ -19,11 +21,12 @@ async function findAllMetadataWithTextSearching(credentials) {
 
 function FindAllWithTextSearching() {
     const { token, setToken } = useToken();
-    const [data, setData] = useState([]);
+    const { currentGeo, setCurrentGeo } = useCurrentGeo();
 
     async function Exec(searchParam) {
         return await findAllMetadataWithTextSearching({
             token,
+            currentGeo,
             searchParam
         });
     }
@@ -33,8 +36,8 @@ function FindAllWithTextSearching() {
         let searchParam = url.substr((url.lastIndexOf('search=') + 'search='.length), url.length - url.lastIndexOf('search='))
         const d = Exec(searchParam);
         d.then(function(result) {
+            console.log(result);
             if (result.length > 0) {
-                console.log(result);
             }
         });
     })

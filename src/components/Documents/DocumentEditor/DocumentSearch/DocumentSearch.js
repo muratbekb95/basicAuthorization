@@ -1,5 +1,5 @@
 import React from 'react';
-import "../DocumentSearch/DocumentSearch.css"
+import '../../../../static/css/DocumentSearch.css';
 
 export default function DocumentSearch() {
   return (

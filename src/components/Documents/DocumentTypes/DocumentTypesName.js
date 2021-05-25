@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import useToken from '../../../useToken';
+import useCurrentGeo from '../../../useCurrentGeo';
 import _ from 'lodash';
 
 async function returnDocumentTypes(credentials) {
-    return fetch('http://localhost:5053/document-types/name'+credentials.name, {
+    return fetch('http://doctype-haos.apps.ocp-t.sberbank.kz/document-types/name'+credentials.name, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': credentials.token
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo
         }
     }).then(r=>r.json())
 }
 
 function DocumentTypesName() {
     const { token, setToken } = useToken();
-    const [data, setData] = useState([]);
+    const { currentGeo, setCurrentGeo } = useCurrentGeo();
 
     async function Exec(name) {
         return await returnDocumentTypes({
             token,
+            currentGeo,
             name
         });
     }
