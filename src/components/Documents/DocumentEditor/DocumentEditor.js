@@ -5,7 +5,6 @@ import sberbankLogo from "../../../static/img/sberbank-logo.png"
 
 // Be sure to include styles at some point, probably during your bootstraping
 import '@trendmicro/react-sidenav/dist/react-sidenav.css';
-import Dashboard from '../../Dashboard/Dashboard';
 import DocumentUpload from './DocumentUpload/DocumentUpload';
 import DocumentSearch from './DocumentSearch/DocumentSearch';
 
@@ -67,7 +66,7 @@ export default function DocumentEditor() {
                             >
                                 <SideNav.Toggle />
                                 <SideNav.Nav defaultSelected="home">
-                                    <NavItem eventKey="doc-upload">
+                                    <NavItem eventKey="">
                                         <NavIcon>
                                             <i className="fa fa-fw fa-line-chart" style={{ fontSize: '1.75em' }} />
                                         </NavIcon>
@@ -102,8 +101,7 @@ export default function DocumentEditor() {
                                 </SideNav.Nav>
                             </SideNav>
                             <main className="content">
-                                <Route path="/" exact component={props => <Dashboard />} />
-                                <Route path="/doc-upload" component={props => <DocumentUpload />} />
+                                <Route path="/" exact component={props => <DocumentUpload />} />
                                 <Route path="/doc-search" component={props => <DocumentSearch />} />
                             </main>
                         </React.Fragment>
