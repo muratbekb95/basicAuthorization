@@ -2,11 +2,51 @@ import React, { useState } from 'react';
 // import { useForm } from "react-hook-form";
 import upload from "../DocumentUpload/upload.svg";
 import '../../../../static/css/DocumentUpload.css';
+import useToken from '../../../../useToken';
+import useCurrentGeo from '../../../../useCurrentGeo';
 import DocumentTypesRootAll from "../../DocumentTypes/DocumentTypesRootAll";
 
 export default function DocumentUpload(props) {
+  const { token, setToken } = useToken();
+  const { currentGeo, setCurrentGeo } = useCurrentGeo();
+
   const { onSubmit } = props;
-  // const { register, handleSubmit } = useForm();
+
+  async function postFilesToStorage(credentials) {
+
+    // console.log("Files:")
+    // for(var pair of credentials.files.entries()) {
+    //     console.log(pair)
+    // }
+  
+    // console.log("Body:")
+    // for(var pair of credentials.body.entries()) {
+    //   console.log(pair)
+    // }
+
+    return fetch('http://storage-haos.apps.ocp-t.sberbank.kz/files', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo
+        },
+        body: {
+            "file": credentials.files,
+            "body": credentials.body,
+        }
+    }).then(r => r.json())
+  }
+
+  // Запрос, который отправляется на сервер, чтобы сохранить файл и метаданные к нему в хранилище
+  async function Exec3(files, body) {
+    return await postFilesToStorage({
+        token,
+        currentGeo,
+        files,
+        body
+    })
+  }
 
   // Вызывается при загрузке файла, достаёт "имя" файла
   function fileInputClicked(e) {
@@ -72,8 +112,34 @@ export default function DocumentUpload(props) {
 
   function handleSubmit(e) {
     e.preventDefault()
-    console.log(docTypes)
-    // console.log(DocumentTypesRootAll.getElementsByClassName('container-form'))
+
+    let fileFormData = new FormData();
+    for(var i=0;i<e.target[1].files.length;i++) {
+      fileFormData.append("file_"+(i+1), e.target[1].files[i])
+    }
+
+    var selectionOfDocTypeAndAreaOfVisibility = document.getElementsByClassName('selectionOfDocTypeAndAreaOfVisibility')[0]
+    var categories = selectionOfDocTypeAndAreaOfVisibility.getElementsByClassName('container')[0].getElementsByClassName('categories')[0].childNodes;
+
+    let bodyFormData = new FormData(categories[4]);
+    var doctype = sessionStorage.getItem('doctype')
+    if(doctype != "NULL") {
+      bodyFormData.append("type", doctype)
+    }
+    bodyFormData.append("number", e.target[2].value)
+
+    attributes.forEach(attr => {
+      const attrubuteFieldsKey = attr.attrubuteFieldsKey;
+      const attrubuteFieldsValue = attr.attrubuteFieldsValue;
+      var attribute = {};
+      attribute[attrubuteFieldsKey] = attrubuteFieldsValue;
+      bodyFormData.append("attributes", attribute);
+    });
+
+    const d = Exec3(fileFormData, bodyFormData);
+    d.then(function (result) {
+      console.log(result)
+    });
   }
 
   return (
@@ -107,7 +173,7 @@ export default function DocumentUpload(props) {
       </form>
       <div className="AttributesAppend">
         <h6>Добавление атрибутов</h6>
-        <div id="attributes">
+        <div className="attributes">
           {attributes.map((attr, i) => (
             <Attribute key={i} id={i} />
           ))}

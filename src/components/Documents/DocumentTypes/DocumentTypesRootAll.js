@@ -26,21 +26,6 @@ async function returnDocumentTypesIdVersions(credentials) {
     }).then(r => r.json())
 }
 
-async function postFilesToStorage(credentials) {
-    return fetch('http://storage-haos.apps.ocp-t.sberbank.kz/files', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': credentials.token,
-            'Geo': credentials.currentGeo
-        },
-        body: {
-            "file": JSON.stringify(credentials.files),
-            "body": JSON.stringify(credentials.body),
-        }
-    }).then(r => r.json())
-}
-
 function DocumentTypesRootAll() {
     const { token, setToken } = useToken();
     const { currentGeo, setCurrentGeo } = useCurrentGeo();
@@ -107,16 +92,6 @@ function DocumentTypesRootAll() {
             token,
             currentGeo,
             id
-        })
-    }
-
-    // Запрос, который отправляется на сервер, чтобы сохранить файл и метаданные к нему в хранилище
-    async function Exec3(files, body) {
-        return await postFilesToStorage({
-            token,
-            currentGeo,
-            files,
-            body
         })
     }
 
@@ -282,7 +257,7 @@ function DocumentTypesRootAll() {
         )) : Object.keys(recursive_objects).map(k => (
             <div className="container-form-subcontent">
                 {isNaN(k) && <h6>{k}:</h6>}
-                {isNaN(k) && recursive_objects[k] == 'required' ? <input type="text" required></input> : <input type="text"></input>}<br />
+                {isNaN(k) && recursive_objects[k] == 'required' ? <input type="text" name={k} required></input> : <input type="text" name={k}></input>}<br />
             </div>
         )));
     }
@@ -332,12 +307,14 @@ function DocumentTypesRootAll() {
                                 updateSelectedSubSubCategory(null)
                                 setVersions([])
                                 setVersionDocStructure(null)
+                                sessionStorage.setItem('doctype', "NULL");
                             } else {
                                 category.map(c => {
                                     const str = e.target.value;
                                     var i = str.indexOf(' ');
                                     var selected_doc_type = str.substring(0, i)
                                     if (c.doc_type == selected_doc_type) {
+                                        sessionStorage.setItem('doctype', selected_doc_type);
                                         updateSelectedCategory(c)
                                         if (sub_category.length > 0) {
                                             var BreakException = {};
@@ -521,7 +498,7 @@ function DocumentTypesRootAll() {
                         <br />
                     </div>
                     {versionDocStructure !== undefined && versionDocStructure != null ?
-                        <FormObject className="container-form" recursive_objects={versionDocStructure} />
+                        <form className="container-form"><FormObject recursive_objects={versionDocStructure} /></form>
                         : console.log("versionDocStructure is null")}
                 </div> : <h3>Отсутствуют категории</h3>}
         </div>
