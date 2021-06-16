@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // import { useForm } from "react-hook-form";
-import upload from "../DocumentUpload/upload.svg";
 import '../../../../static/css/DocumentUpload.css';
 import useToken from '../../../../useToken';
 import useCurrentGeo from '../../../../useCurrentGeo';
 import DocumentTypesRootAll from "../../DocumentTypes/DocumentTypesRootAll";
+import axios from 'axios';
 
 export default function DocumentUpload(props) {
   const { token, setToken } = useToken();
@@ -14,28 +14,36 @@ export default function DocumentUpload(props) {
 
   async function postFilesToStorage(credentials) {
 
-    // console.log("Files:")
-    // for(var pair of credentials.files.entries()) {
-    //     console.log(pair)
-    // }
+    console.log("Files:")
+    for(var pair of credentials.files.entries()) {
+        console.log(pair)
+    }
   
-    // console.log("Body:")
-    // for(var pair of credentials.body.entries()) {
-    //   console.log(pair)
-    // }
+    console.log("Body:")
+    for(var pair of credentials.body.entries()) {
+      console.log(pair)
+    }
 
-    return fetch('http://storage-haos.apps.ocp-t.sberbank.kz/files', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': credentials.token,
-            'Geo': credentials.currentGeo
-        },
-        body: {
-            "file": credentials.files,
-            "body": credentials.body,
-        }
-    }).then(r => r.json())
+    return axios({
+      method: "post",
+      url: "http://storage-haos.apps.ocp-t.sberbank.kz/files",
+      headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': credentials.token,
+          'Geo': credentials.currentGeo,
+      },
+      body: {
+          "file": credentials.files,
+          "body": credentials.body,
+      }
+    })
+    .then(r => r.json())
+    .catch(() => {
+        // If error, display a message on the upload modal
+        uploadRef.current.innerHTML = `<span class="error">Error Uploading File(s)</span>`;
+        // set progress bar background color to red
+        progressRef.current.style.backgroundColor = 'red';
+    });
   }
 
   // Запрос, который отправляется на сервер, чтобы сохранить файл и метаданные к нему в хранилище
@@ -46,11 +54,6 @@ export default function DocumentUpload(props) {
         files,
         body
     })
-  }
-
-  // Вызывается при загрузке файла, достаёт "имя" файла
-  function fileInputClicked(e) {
-    document.getElementById("fileNameFromInputFile").value = e.target.files[0].name;
   }
 
   // Добавление и удаление аттрибутов
@@ -112,10 +115,9 @@ export default function DocumentUpload(props) {
 
   function handleSubmit(e) {
     e.preventDefault()
-
     let fileFormData = new FormData();
-    for(var i=0;i<e.target[1].files.length;i++) {
-      fileFormData.append("file_"+(i+1), e.target[1].files[i])
+    for(var i=0;i<validFiles.length;i++) {
+      fileFormData.append("file_"+(i+1), validFiles[i])
     }
 
     var selectionOfDocTypeAndAreaOfVisibility = document.getElementsByClassName('selectionOfDocTypeAndAreaOfVisibility')[0]
@@ -126,7 +128,7 @@ export default function DocumentUpload(props) {
     if(doctype != "NULL") {
       bodyFormData.append("type", doctype)
     }
-    bodyFormData.append("number", e.target[2].value)
+    bodyFormData.append("number", e.target[1].value)
 
     attributes.forEach(attr => {
       const attrubuteFieldsKey = attr.attrubuteFieldsKey;
@@ -139,30 +141,165 @@ export default function DocumentUpload(props) {
     const d = Exec3(fileFormData, bodyFormData);
     d.then(function (result) {
       console.log(result)
+      uploadRef.current.innerHTML = 'File(s) Uploaded';
     });
   }
+
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [validFiles, setValidFiles] = useState([]);
+  const [unsupportedFiles, setUnsupportedFiles] = useState([]);
+  const fileInputRef = useRef();
+
+  const dragOver = (e) => {
+      e.preventDefault();
+  }
+  
+  const dragEnter = (e) => {
+      e.preventDefault();
+  }
+  
+  const dragLeave = (e) => {
+      e.preventDefault();
+  }
+  
+  const fileDrop = (e) => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files.length) {
+          handleFiles(files);
+      }
+  }
+
+  const fileInputClicked = () => {
+      fileInputRef.current.click();
+  }
+
+  const filesSelected = () => {
+      if (fileInputRef.current.files.length) {
+          handleFiles(fileInputRef.current.files);
+      }
+  }
+
+  const handleFiles = (files) => {
+      for(let i = 0; i < files.length; i++) {
+          if (validateFile(files[i])) {
+              // add to an array so we can display the name of file
+              setSelectedFiles(prevArray => [...prevArray, files[i]]);
+          } else {
+              // add a new property called invalid
+              files[i]['invalid'] = true;
+              // // add to the same array so we can display the name of the file
+              setSelectedFiles(prevArray => [...prevArray, files[i]]);
+              // // set error message
+              setErrorMessage('File type not permitted');
+
+              setUnsupportedFiles(prevArray => [...prevArray, files[i]]);
+          }
+      }
+  }
+
+  const fileType = (fileName) => {
+      return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length) || fileName;
+  }
+
+  const validateFile = (file) => {
+      const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/x-icon'];
+      if (validTypes.indexOf(file.type) === -1) {
+          return false;
+      }
+      return true;
+  }
+
+  const fileSize = (size) => {
+      if (size === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(size) / Math.log(k));
+      return parseFloat((size / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  const removeFile = (name) => {
+      // find the index of the item
+      // remove the item from array
+  
+      const validFileIndex = validFiles.findIndex(e => e.name === name);
+      validFiles.splice(validFileIndex, 1);
+      // update validFiles array
+      setValidFiles([...validFiles]);
+      const selectedFileIndex = selectedFiles.findIndex(e => e.name === name);
+      selectedFiles.splice(selectedFileIndex, 1);
+      // update selectedFiles array
+      setSelectedFiles([...selectedFiles]);
+
+      const unsupportedFileIndex = unsupportedFiles.findIndex(e => e.name === name);
+      if (unsupportedFileIndex !== -1) {
+          unsupportedFiles.splice(unsupportedFileIndex, 1);
+          // update unsupportedFiles array
+          setUnsupportedFiles([...unsupportedFiles]);
+      }
+  }
+
+  useEffect(() => {
+    let filteredArray = selectedFiles.reduce((file, current) => {
+        const x = file.find(item => item.name === current.name);
+        if (!x) {
+            return file.concat([current]);
+        } else {
+            return file;
+        }
+    }, []);
+    setValidFiles([...filteredArray]);
+
+  }, [selectedFiles]);
+
+  const uploadRef = useRef();
+  const progressRef = useRef();
 
   return (
     <div>
       <form className="documentUploadForm" onSubmit={e => handleSubmit(e)}>
-        <div className="fileUploadSection">
-          <h6>Выбор файла</h6>
-          <input type="text" disabled id="fileNameFromInputFile"></input>
-          <br />
-          <div className="container-organization">
-            <input
-              type="file"
-              name="docContent"
-              placeholder="Выберите документ"
-              id="input__file"
-              className="input__file"
-              onChange={fileInputClicked}
-            />
-            <label htmlFor="input__file" className="input__file-button">
-              <span className="input__file-icon-wrapper"><img className="input__file-icon" src={upload} alt="Выбрать файл" /></span>
-              <span className="input__file-button-text">Выберите файл</span>
-            </label>
-          </div>
+        <div className="dragAndDrop">
+          <div className="drop-container" 
+                onDragOver={dragOver}
+                onDragEnter={dragEnter}
+                onDragLeave={dragLeave}
+                onDrop={fileDrop}
+                onClick={fileInputClicked}
+            >
+                <div className="drop-message">
+                    <div className="upload-icon"></div>
+                    Перетащите или нажмите левой кнопкой мыши, чтобы загрузить файл
+                </div>
+                <input
+                    ref={fileInputRef}
+                    className="file-input"
+                    type="file"
+                    multiple
+                    onChange={filesSelected}
+                />
+            </div>
+            <div className="file-display-container">
+                {
+                    validFiles.map((data, i) => 
+                        <div className="file-status-bar">
+                            <div>
+                                {/* <div className="file-type-logo"></div> */}
+                                <div className="file-type">png</div>
+                                <span className={`file-name ${data.invalid ? 'file-error' : ''}`}>{data.name}</span>
+                                <span className="file-size">({fileSize(data.size)})</span> {data.invalid && <span className='file-error-message'>({errorMessage})</span>}
+                            </div>
+                            <div className="file-remove" onClick={() => removeFile(data.name)}>X</div>
+                        </div>
+                    )
+                }
+            </div>
+            <div className="progress-container">
+              <span ref={uploadRef}></span>
+              <div className="progress">
+                  <div className="progress-bar" ref={progressRef}></div>
+              </div>
+            </div>
         </div>
         <div className="selectionOfDocTypeAndAreaOfVisibility">
           <h6>Выбор - Документ типа и область видимости</h6>

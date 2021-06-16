@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 async function findAllMetadataWithFullSearching(credentials) {
     var arr = credentials.searchParam.split(/[ ,]+/);
+    console.log(arr)
     return fetch('http://metadata-haos.apps.ocp-t.sberbank.kz/metadata/search/full', {
         method: 'POST',
         headers: {
@@ -32,12 +33,11 @@ function FindAllWithFullSearching() {
 
     useEffect(() => {
         let url = window.location.href;
-        console.log(url)
         let searchParam = url.substr((url.lastIndexOf('search=') + 'search='.length), url.length - url.lastIndexOf('search='))
         const d = Exec(searchParam);
         d.then(function(result) {
-            console.log(result);
             if (result.length > 0) {
+                console.log(result)
             }
         });
     })

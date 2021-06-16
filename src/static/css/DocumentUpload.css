@@ -64,3 +64,139 @@ input[type=submit] {
   margin-right: 10px;
   vertical-align: middle;
 }
+.documentUploadForm .dragAndDrop {
+  background-color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.documentUploadForm .dragAndDrop .drop-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  width: 500px;
+  height: 200px;
+  border: 4px dashed #4aa1f3;
+}
+.documentUploadForm .dragAndDrop .drop-container .drop-message {
+  text-align: center;
+  color: #4aa1f3;
+  font-family: Arial;
+  font-size: 20px;
+}
+.documentUploadForm .dragAndDrop .drop-container .drop-message .upload-icon {
+  width: 50px;
+  height: 50px;
+  background: url(../img/upload.svg) no-repeat center center;
+  background-size: 100%;
+  text-align: center;
+  margin: 0 auto;
+  padding-top: 30px;
+}
+.documentUploadForm .dragAndDrop .drop-container .file-input {
+  display: none;
+}
+.documentUploadForm .dragAndDrop .file-display-container {
+  width: 805px;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar {
+  width: 100%;
+  vertical-align: top;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  position: relative;
+  line-height: 50px;
+  height: 50px;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar div {
+  overflow: hidden;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar div .file-type {
+  display: inline-block !important;
+  position: absolute;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 13px;
+  margin-top: 25px;
+  padding: 0 4px;
+  border-radius: 2px;
+  box-shadow: 1px 1px 2px #abc;
+  color: #fff;
+  background: #0080c8;
+  text-transform: uppercase;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar div .file-name {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 50px;
+  color: #4aa1f3;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar div .file-size {
+  display: inline-block;
+  vertical-align: top;
+  color: #30693D;
+  margin-right: 5px;
+  margin-left: 10px;
+  color: #444242;
+  font-weight: 700;
+  font-size: 14px;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar div .file-error {
+  display: inline-block;
+  vertical-align: top;
+  margin-left: 50px;
+  color: #9aa9bb;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar div .file-error-message {
+  color: red;
+}
+.documentUploadForm .dragAndDrop .file-display-container .file-status-bar .file-remove {
+  position: relative;
+  top: -30px;
+  left: 250px;
+  line-height: 15px;
+  cursor: pointer;
+  color: red;
+  margin-right: -10px;
+}
+.documentUploadForm .dragAndDrop .progress-container {
+  background: white;
+  width: 500px;
+  height: 300px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: hidden;
+}
+.documentUploadForm .dragAndDrop .progress-container span {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  font-size: 20px;
+}
+.documentUploadForm .dragAndDrop .progress-container span .error {
+  color: red;
+}
+.documentUploadForm .dragAndDrop .progress-container .progress {
+  width: 90%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #efefef;
+  height: 20px;
+  border-radius: 5px;
+}
+.documentUploadForm .dragAndDrop .progress-container .progress .progress-bar {
+  position: absolute;
+  background-color: #4aa1f3;
+  height: 20px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+}

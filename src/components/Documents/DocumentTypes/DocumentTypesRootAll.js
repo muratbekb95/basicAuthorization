@@ -151,14 +151,126 @@ function DocumentTypesRootAll() {
     useEffect(() => {
         const d = Exec();
         d.then(function (result) {
-            if (result.length > 0) {
+
+            const arr = [
+                {
+                    id: "076b114a-0e8e-4995-a18e-201521fdedc1",
+                    doc_type: "CREDIT",
+                    parent_id: "",
+                    deepest_node: false
+                },
+                {
+                    id: "bb2501e5-ef16-4982-b06c-f84882b5fb3e",
+                    doc_type: "MORTGAGE",
+                    parent_id: "",
+                    deepest_node: false
+                },
+                {
+                    id: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
+                    doc_type: "CONSENT",
+                    parent_id: "",
+                    deepest_node: false
+                },
+                {
+                    id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "CONSENT",
+                    parent_id: "bb0a253e-d1f2-4ca2-8c13-f05b9d08359a",
+                    deepest_node: false
+                },
+                {
+                    id: "9f25ae26-a66e-11eb-bcbc-0242ac130002",
+                    doc_type: "MORTGAGE",
+                    parent_id: "bb2501e5-ef16-4982-b06c-f84882b5fb3e",
+                    deepest_node: false
+                },
+                {
+                    id: "288f55a8-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "TAX",
+                    parent_id: "",
+                    deepest_node: false
+                },
+                {
+                    id: "400e49be-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "TAX",
+                    parent_id: "a04c3160-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: true
+                },
+                {
+                    id: "30c92410-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "CREDIT",
+                    parent_id: "076b114a-0e8e-4995-a18e-201521fdedc1",
+                    deepest_node: false
+                },
+                {
+                    id: "772b18b4-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "CREDIT",
+                    parent_id: "30c92410-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: true
+                },
+                {
+                    id: "8091a08a-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "INVESTMENT",
+                    parent_id: "",
+                    deepest_node: false
+                },
+                {
+                    id: "8512f370-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "SHARE",
+                    parent_id: "",
+                    deepest_node: false
+                },
+                {
+                    id: "9019c17c-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "MORTGAGE",
+                    parent_id: "9f25ae26-a66e-11eb-bcbc-0242ac130002",
+                    deepest_node: true
+                },
+                {
+                    id: "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
+                    doc_type: "CREDIT",
+                    parent_id: "30c92410-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: true
+                },
+                {
+                    id: "94dd5fde-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "CONSENT",
+                    parent_id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: true
+                },
+                {
+                    id: "a04c3160-a639-11eb-bcbc-0242ac130002",
+                    doc_type: "TAX",
+                    parent_id: "288f55a8-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: false
+                },
+                {
+                    id: "a08a22f2-b7ac-11eb-8529-0242ac130003",
+                    doc_type: "TAX",
+                    parent_id: "288f55a8-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: false
+                },
+                {
+                    id: "c508cfc0-b7ac-11eb-8529-0242ac130003",
+                    doc_type: "TAX",
+                    parent_id: "a08a22f2-b7ac-11eb-8529-0242ac130003",
+                    deepest_node: true
+                },
+                {
+                    id: "b7906c38-b7af-11eb-8529-0242ac130003",
+                    doc_type: "CONSENT",
+                    parent_id: "20f5a43c-a639-11eb-bcbc-0242ac130002",
+                    deepest_node: true
+                }
+            ]
+
+            if (arr.length > 0) {
                 var chain_of_nodes = [];
                 var m = [];
 
                 // построить массив из цепочек нодов согласно родительской принадлежности
-                result.forEach(r => {
+                arr.forEach(r => {
                     if (r.parent_id != "" && r.parent_id != null) {
-                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, result))));
+                        chain_of_nodes.push(Array.from(new Set(build_chain(r, m, arr))));
                         m = [];
                     } else {
                         chain_of_nodes.push([r])
@@ -208,7 +320,7 @@ function DocumentTypesRootAll() {
                     var chainLevel = []
                     var finishFiltering = false;
                     var indexCnt = 0;
-                    var maxLevel = sorted_chain_of_nodes[0].length;
+                    var maxLevel = sorted_chain_of_nodes[sorted_chain_of_nodes.length-1].length;
 
                     var BreakException = {};
                     try {
@@ -247,6 +359,172 @@ function DocumentTypesRootAll() {
         });
     }, []);
 
+    const arr2 = [
+        {
+            "id": "400e49be-a639-11eb-bcbc-0242ac130002",
+            "data": [
+                {
+                    "id": "73a41174-b7b3-11eb-8529-0242ac130003",
+                    "doc_type_id": "400e49be-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "iin": "required"
+                    },
+                    "version": 1
+                },
+                {
+                    "id": "809597ea-b7b3-11eb-8529-0242ac130003",
+                    "doc_type_id": "400e49be-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "consent": {
+                            "beginDate": "required",
+                            "customer": {
+                                "externalId": "required",
+                                "firstname": "required",
+                                "id": "required",
+                                "iin": "required",
+                                "phone": "required",
+                                "surname": ""
+                            },
+                            "expirationDate": "required",
+                            "id": "required",
+                            "iin": "required",
+                            "initiator": {
+                                "ip": "required",
+                                "system": "required",
+                                "userExternalId": "required",
+                                "userName": "required",
+                                "userSurname": ""
+                            },
+                            "ip": "required",
+                            "location": "required",
+                            "revocationDate": "required",
+                            "terms": {
+                                "activity": "",
+                                "beginDate": "required",
+                                "documentID": "required",
+                                "id": "required",
+                                "partner": {
+                                    "externalId": "required",
+                                    "id": "required",
+                                    "title": "required"
+                                },
+                                "publicLink": "required",
+                                "scope": "required",
+                                "termVersionID": "required",
+                                "version": "required"
+                            },
+                            "type": "required"
+                        },
+                        "image_file_link": "required"
+                    },
+                    "version": 2
+                },
+                {
+                    "id": "86267e7c-b7b3-11eb-8529-0242ac130003",
+                    "doc_type_id": "400e49be-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "office": {
+                            "officeId": "required",
+                            "title": "required",
+                            "location": "required",
+                            "phone": "required",
+                            "fax": ""
+                        }
+                    },
+                    "version": 3
+                }
+            ]
+        },
+        {
+            "id": "772b18b4-a639-11eb-bcbc-0242ac130002",
+            "data": [
+                {
+                    "id": "20616078-b7b5-11eb-8529-0242ac130003",
+                    "doc_type_id": "772b18b4-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "iin": "required"
+                    },
+                    "version": 1
+                },
+            ]
+        },
+        {
+            "id": "9019c17c-a639-11eb-bcbc-0242ac130002",
+            "data": [
+                {
+                    "id": "343eeb60-b7b5-11eb-8529-0242ac130003",
+                    "doc_type_id": "9019c17c-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required"
+                    },
+                    "version": 1
+                },
+            ]
+        },
+        {
+            "id": "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
+            "data": [
+                {
+                    "id": "558573e8-b7b5-11eb-8529-0242ac130003",
+                    "doc_type_id": "3d0f1c9a-b7ad-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required"
+                    },
+                    "version": 1
+                },
+            ]
+        },
+        {
+            "id": "94dd5fde-a639-11eb-bcbc-0242ac130002",
+            "data": [
+                {
+                    "id": "662ca202-b7b5-11eb-8529-0242ac130003",
+                    "doc_type_id": "94dd5fde-a639-11eb-bcbc-0242ac130002",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required"
+                    },
+                    "version": 1
+                },
+            ]
+        },
+        {
+            "id": "c508cfc0-b7ac-11eb-8529-0242ac130003",
+            "data": [
+                {
+                    "id": "7b5cb568-b7b5-11eb-8529-0242ac130003",
+                    "doc_type_id": "c508cfc0-b7ac-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required"
+                    },
+                    "version": 1
+                },
+            ]
+        },
+        {
+            "id": "b7906c38-b7af-11eb-8529-0242ac130003",
+            "data": [
+                {
+                    "id": "957249cc-b7b5-11eb-8529-0242ac130003",
+                    "doc_type_id": "b7906c38-b7af-11eb-8529-0242ac130003",
+                    "doc_structure": {
+                        "iin": "required",
+                        "name": "required",
+                        "telephone": "required"
+                    },
+                    "version": 1
+                },
+            ]
+        }
+    ]
+
     // Тут строится форма для заполнения данных пользователем
     const FormObject = ({ recursive_objects }) => {
         return (typeof Object.values(recursive_objects)[0] == 'object' ? Object.keys(recursive_objects).map(k => (
@@ -273,17 +551,31 @@ function DocumentTypesRootAll() {
     // Отправляет на сервер запрос, чтобы получить версии текущей категорий
     function setVersionsAndSelectedVersionDocStructure(category) {
         setVersions([]);
-        if (category.id !== undefined && category.deepest_node) {    
+        if (category.id !== undefined && category.deepest_node) {
             const d2 = Exec2(category.id);
             d2.then(function (result2) {
-                result2.versions.forEach((v, index) => {
-                    var m = [];
-                    if (!(Object.entries(v.doc_structure).length === 0)) {
-                        m = Array.from(new Set(recursive(v.doc_structure, m)));
-                        v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
-                        v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
+                // result2.versions.forEach((v, index) => {
+                //     var m = [];
+                //     if (!(Object.entries(v.doc_structure).length === 0)) {
+                //         m = Array.from(new Set(recursive(v.doc_structure, m)));
+                //         v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
+                //         v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
+                //     }
+                //     m = [];
+                // })
+                arr2.forEach(elem => {
+                    if(elem.id == category.id) {
+                        result2 = elem.data;
+                        result2.forEach((v, index) => {
+                            var m = [];
+                            if (!(Object.entries(v.doc_structure).length === 0)) {
+                                m = Array.from(new Set(recursive(v.doc_structure, m)));
+                                v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
+                                v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
+                            }
+                            m = [];
+                        })
                     }
-                    m = [];
                 })
             })
         } else {
