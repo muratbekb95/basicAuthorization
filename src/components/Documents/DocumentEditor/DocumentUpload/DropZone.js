@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import "../../../../static/css/DropZone.css"
 
 const DropZone = () => {
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [selectedFile, setSelectedFile] = useState();
     const [errorMessage, setErrorMessage] = useState('');
-    const [validFiles, setValidFiles] = useState([]);
-    const [unsupportedFiles, setUnsupportedFiles] = useState([]);
+    const [extensionName, setExtensionName] = useState([]);
+    const [unsupportedFile, setUnsupportedFile] = useState([]);
     const fileInputRef = useRef();
 
     const dragOver = (e) => {
@@ -40,32 +40,30 @@ const DropZone = () => {
 
     const handleFiles = (files) => {
         for(let i = 0; i < files.length; i++) {
-            if (validateFile(files[i])) {
+            const k = 1024;
+            var size = files[i].size;
+            const exp = Math.floor(Math.log(size) / Math.log(k));
+            var fileSize = parseFloat((size / Math.pow(k, exp)).toFixed(2))
+
+            if (fileSize <= 2048) { // 20 MB is limit for file upload
+                setExtensionName(getExtension(files[i].name))
                 // add to an array so we can display the name of file
-                setSelectedFiles(prevArray => [...prevArray, files[i]]);
+                setSelectedFile(files[i]);
             } else {
                 // add a new property called invalid
                 files[i]['invalid'] = true;
                 // // add to the same array so we can display the name of the file
-                setSelectedFiles(prevArray => [...prevArray, files[i]]);
+                setSelectedFile(files[i]);
                 // // set error message
-                setErrorMessage('File type not permitted');
+                setErrorMessage('File size exceeds limit of 20 MB');
 
-                setUnsupportedFiles(prevArray => [...prevArray, files[i]]);
+                setUnsupportedFile(files[i]);
             }
         }
     }
 
-    const fileType = (fileName) => {
-        return fileName.substring(fileName.lastIndexOf('.') + 1, fileName.length) || fileName;
-    }
-
-    const validateFile = (file) => {
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/x-icon'];
-        if (validTypes.indexOf(file.type) === -1) {
-            return false;
-        }
-        return true;
+    const getExtension = (file) => {
+        return file.split('.').pop();
     }
 
     const fileSize = (size) => {
@@ -76,39 +74,12 @@ const DropZone = () => {
         return parseFloat((size / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    const removeFile = (name) => {
-        // find the index of the item
+    function removeFile() {
         // remove the item from array
-    
-        const validFileIndex = validFiles.findIndex(e => e.name === name);
-        validFiles.splice(validFileIndex, 1);
-        // update validFiles array
-        setValidFiles([...validFiles]);
-        const selectedFileIndex = selectedFiles.findIndex(e => e.name === name);
-        selectedFiles.splice(selectedFileIndex, 1);
-        // update selectedFiles array
-        setSelectedFiles([...selectedFiles]);
-
-        const unsupportedFileIndex = unsupportedFiles.findIndex(e => e.name === name);
-        if (unsupportedFileIndex !== -1) {
-            unsupportedFiles.splice(unsupportedFileIndex, 1);
-            // update unsupportedFiles array
-            setUnsupportedFiles([...unsupportedFiles]);
-        }
+        setSelectedFile();
+        setExtensionName();
+        setUnsupportedFile();
     }
-
-    useEffect(() => {
-        let filteredArray = selectedFiles.reduce((file, current) => {
-            const x = file.find(item => item.name === current.name);
-            if (!x) {
-                return file.concat([current]);
-            } else {
-                return file;
-            }
-        }, []);
-        setValidFiles([...filteredArray]);
-    
-    }, [selectedFiles]);
 
     return (
         <div className="container">
@@ -119,31 +90,29 @@ const DropZone = () => {
                 onDrop={fileDrop}
                 onClick={fileInputClicked}
             >
-                <div className="drop-message">
-                    <div className="upload-icon"></div>
-                    Перетащите или нажмите левой кнопкой мыши, чтобы загрузить файл
-                </div>
-                <input
-                    ref={fileInputRef}
-                    className="file-input"
-                    type="file"
-                    multiple
-                    onChange={filesSelected}
-                />
+              <div className="drop-message">
+                  <div className="upload-icon"></div>
+                  Перетащите или нажмите левой кнопкой мыши, чтобы загрузить файл
+              </div>
+              <input
+                  ref={fileInputRef}
+                  className="file-input"
+                  type="file"
+                  onChange={filesSelected}
+              />
             </div>
             <div className="file-display-container">
                 {
-                    validFiles.map((data, i) => 
-                        <div className="file-status-bar">
-                            <div>
-                                {/* <div className="file-type-logo"></div> */}
-                                <div className="file-type">png</div>
-                                <span className={`file-name ${data.invalid ? 'file-error' : ''}`}>{data.name}</span>
-                                <span className="file-size">({fileSize(data.size)})</span> {data.invalid && <span className='file-error-message'>({errorMessage})</span>}
-                            </div>
-                            <div className="file-remove" onClick={() => removeFile(data.name)}>X</div>
+                    selectedFile &&
+                    <div className="file-status-bar">
+                        <div>
+                            {/* <div className="file-type-logo"></div> */}
+                            <div className="file-type">({extensionName})</div>
+                            <span className={`file-name ${selectedFile.invalid ? 'file-error' : ''}`}>{selectedFile.name}</span>
+                            <span className="file-size">({fileSize(selectedFile.size)})</span> {selectedFile.invalid && <span className='file-error-message'>({errorMessage})</span>}
                         </div>
-                    )
+                        <div className="file-remove" onClick={() => removeFile()}>X</div>
+                    </div>
                 }
             </div>
         </div>

@@ -162,41 +162,17 @@ input[type=submit] {
   color: red;
   margin-right: -10px;
 }
-.documentUploadForm .dragAndDrop .progress-container {
+.documentUploadForm .dragAndDrop .file-upload-status {
   background: white;
   width: 500px;
   height: 300px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   overflow: hidden;
-}
-.documentUploadForm .dragAndDrop .progress-container span {
   display: flex;
   justify-content: center;
   padding-top: 20px;
   font-size: 20px;
 }
-.documentUploadForm .dragAndDrop .progress-container span .error {
+.documentUploadForm .dragAndDrop .file-upload-status .error {
   color: red;
-}
-.documentUploadForm .dragAndDrop .progress-container .progress {
-  width: 90%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #efefef;
-  height: 20px;
-  border-radius: 5px;
-}
-.documentUploadForm .dragAndDrop .progress-container .progress .progress-bar {
-  position: absolute;
-  background-color: #4aa1f3;
-  height: 20px;
-  border-radius: 5px;
-  text-align: center;
-  color: white;
-  font-weight: bold;
 }
