@@ -14,45 +14,38 @@ export default function DocumentUpload(props) {
   const uploadRef = useRef();
 
   async function postFilesToStorage(credentials) {
-    console.log("Files:")
-    for(var pair of credentials.files.entries()) {
-        console.log(pair)
-    }
-  
-    console.log("Body:")
-    for(var pair of credentials.body.entries()) {
-      console.log(pair)
-    }
+    console.log("Geo")
+    console.log(credentials.currentGeo)
 
-    return axios.post('http://storage-haos.apps.ocp-t.sberbank.kz/files', {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Accept': 'multipart/form-data',
-        'Geo': credentials.currentGeo,
-        'Authorization': credentials.token
-      },
-      body : {
-        'file': credentials.files,
-        'body': credentials.body
-      },
-      withCredentials: true
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      // If error, display a message on the upload modal
-      uploadRef.current.innerHTML = `<span class="error">Error Uploading File(s)</span>`;
-      // set file upload status background color to red
-    });
+    console.log("Authorization:")
+    console.log(credentials.token)
+  
+    var body = "{";
+    for(var pair of credentials.body.entries()) {
+        body += "\"" + pair[0] +"\": \"" + pair[1] + "\",";
+    }
+    body = body.substring(0, body.length-1);
+    body += "}";
+
+    let newFormData = new FormData();
+    newFormData.append('file', credentials.file);
+    newFormData.append('body', body);
+    return fetch('http://storage-haos.apps.ocp-t.sberbank.kz/files', {
+        method: 'POST',
+        headers: {
+            'Authorization': credentials.token,
+            'Geo': credentials.currentGeo,
+        },
+        body: newFormData
+    }).then(r => r.json())
   }
 
   // Запрос, который отправляется на сервер, чтобы сохранить файл и метаданные к нему в хранилище
-  async function Exec3(files, body) {
+  async function Exec3(file, body) {
     return await postFilesToStorage({
         token,
         currentGeo,
-        files,
+        file,
         body
     })
   }
@@ -112,8 +105,6 @@ export default function DocumentUpload(props) {
     modifyDocumentUploadFormSubmitStyleTop(true)
   }
 
-  const docTypes = DocumentTypesRootAll()
-
   const [selectedFile, setSelectedFile] = useState();
   const [errorMessage, setErrorMessage] = useState('');
   const [extensionName, setExtensionName] = useState([]);
@@ -122,19 +113,29 @@ export default function DocumentUpload(props) {
 
   function handleSubmit(e) {
     e.preventDefault()
-
-    let fileFormData = new FormData();
     if(selectedFile) {
-      fileFormData.append("file", selectedFile)
-
       var selectionOfDocTypeAndAreaOfVisibility = document.getElementsByClassName('selectionOfDocTypeAndAreaOfVisibility')[0]
       var categories = selectionOfDocTypeAndAreaOfVisibility.getElementsByClassName('container')[0].getElementsByClassName('categories')[0].childNodes;
-
       let bodyFormData = new FormData(categories[4]);
       var doctype = sessionStorage.getItem('doctype')
       if(doctype != "NULL") {
-        bodyFormData.append("type", doctype)
+        if(selectedSubSubCategory) {
+            if(selectedSubSubCategory.deepest_node) {
+                bodyFormData.append("type", selectedSubSubCategory.id)
+            }
+        }
+        else if(selectedSubCategory) {
+            if(selectedSubCategory.deepest_node) {
+                bodyFormData.append("type", selectedSubCategory.id)
+            }
+        }
+        else if(selectedCategory) {
+            if(selectedCategory.deepest_node) {
+                bodyFormData.append("type", selectedCategory.id)
+            }
+        }
       }
+
       bodyFormData.append("number", e.target[1].value)
 
       attributes.forEach(attr => {
@@ -143,7 +144,7 @@ export default function DocumentUpload(props) {
         bodyFormData.append(attrubuteFieldsKey, attrubuteFieldsValue);
       });
 
-      const d = Exec3(fileFormData, bodyFormData);
+      const d = Exec3(selectedFile, bodyFormData);
       d.then(function (result) {
         console.log(result)
         uploadRef.current.innerHTML = 'Файл загружен';
@@ -375,7 +376,6 @@ function setD(chainData) {
 useEffect(() => {
     const d = Exec();
     d.then(function (result) {
-
         const arr = [
             {
                 id: "076b114a-0e8e-4995-a18e-201521fdedc1",
@@ -487,14 +487,14 @@ useEffect(() => {
             }
         ]
 
-        if (arr.length > 0) {
+        if (result.length > 0) {
             var chain_of_nodes = [];
             var m = [];
 
             // построить массив из цепочек нодов согласно родительской принадлежности
-            arr.forEach(r => {
+            result.forEach(r => {
                 if (r.parent_id != "" && r.parent_id != null) {
-                    chain_of_nodes.push(Array.from(new Set(build_chain(r, m, arr))));
+                    chain_of_nodes.push(Array.from(new Set(build_chain(r, m, result))));
                     m = [];
                 } else {
                     chain_of_nodes.push([r])
@@ -502,7 +502,6 @@ useEffect(() => {
             })
 
             var chainData = []
-            var collapseArr = [];
             // построить массив, который будет отображать инпуты при рендере формы
             if (chain_of_nodes.length == 1) {
                 var ind = {};
@@ -778,29 +777,29 @@ function setVersionsAndSelectedVersionDocStructure(category) {
     if (category.id !== undefined && category.deepest_node) {
         const d2 = Exec2(category.id);
         d2.then(function (result2) {
-            // result2.versions.forEach((v, index) => {
-            //     var m = [];
-            //     if (!(Object.entries(v.doc_structure).length === 0)) {
-            //         m = Array.from(new Set(recursive(v.doc_structure, m)));
-            //         v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
-            //         v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
-            //     }
-            //     m = [];
-            // })
-            arr2.forEach(elem => {
-                if(elem.id == category.id) {
-                    result2 = elem.data;
-                    result2.forEach((v, index) => {
-                        var m = [];
-                        if (!(Object.entries(v.doc_structure).length === 0)) {
-                            m = Array.from(new Set(recursive(v.doc_structure, m)));
-                            v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
-                            v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
-                        }
-                        m = [];
-                    })
+            result2.versions.forEach((v, index) => {
+                var m = [];
+                if (!(Object.entries(v.doc_structure).length === 0)) {
+                    m = Array.from(new Set(recursive(v.doc_structure, m)));
+                    v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
+                    v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
                 }
+                m = [];
             })
+            // arr2.forEach(elem => {
+            //     if(elem.id == category.id) {
+            //         result2 = elem.data;
+            //         result2.forEach((v, index) => {
+            //             var m = [];
+            //             if (!(Object.entries(v.doc_structure).length === 0)) {
+            //                 m = Array.from(new Set(recursive(v.doc_structure, m)));
+            //                 v.doc_type_id == category.id && setVersions(OldVersions => [...OldVersions, v])
+            //                 v.doc_type_id == category.id && index == 0 && selectZeroIndexByDefaultAndSetVersionDocStructure(m)
+            //             }
+            //             m = [];
+            //         })
+            //     }
+            // })
         })
     } else {
         setVersions([])
@@ -879,7 +878,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                                 sub_category.map(sc => {
                                                     if (sc.parent_id == c.id) {
                                                         foundSubCategory = true;
-                                                        updateSelectedSubCategory(sc)
+                                                        updateSelectedSubCategory(null)
                                                         updateSubCategoryFound(true)
                                                         updateSelectedSubSubCategory(null)
                                                         updateSubSubCategoryFound(false)
@@ -948,7 +947,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                                             if (ssc.parent_id == sc.id) {
                                                                 updateSubSubCategoryFound(true)
                                                                 foundSubSubCategory = true;
-                                                                updateSelectedSubSubCategory(ssc)
+                                                                updateSelectedSubSubCategory(null)
                                                                 setVersions([])
                                                                 setVersionDocStructure(null)
                                                             }
