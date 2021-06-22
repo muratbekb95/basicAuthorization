@@ -3,10 +3,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../../../../static/css/DocumentUpload.css';
 import useToken from '../../../../useToken';
 import useCurrentGeo from '../../../../useCurrentGeo';
-import DocumentTypesRootAll from "../../DocumentTypes/DocumentTypesRootAll";
 import "../../../../static/css/DocumentTypesRootAll.css";
 import _, { chain, max } from 'lodash';
-import axios from 'axios';
 
 export default function DocumentUpload(props) {
   const { token, setToken } = useToken();
@@ -14,12 +12,6 @@ export default function DocumentUpload(props) {
   const uploadRef = useRef();
 
   async function postFilesToStorage(credentials) {
-    console.log("Geo")
-    console.log(credentials.currentGeo)
-
-    console.log("Authorization:")
-    console.log(credentials.token)
-  
     var body = "{";
     for(var pair of credentials.body.entries()) {
         body += "\"" + pair[0] +"\": \"" + pair[1] + "\",";
@@ -52,6 +44,8 @@ export default function DocumentUpload(props) {
 
   // Добавление и удаление аттрибутов
   const [attributes, setAttributes] = useState([]);
+  const [inputFromForm, setInputFromForm] = useState([]);
+  const [prevSelectedCategory, setPrevSelectedCategory] = useState();
 
   const Attribute = props => {
     document.getElementById("attrubuteFieldsKey").value = "";
@@ -85,6 +79,21 @@ export default function DocumentUpload(props) {
 
   function addAttributeFields(e) {
     e.preventDefault()
+
+    var selectionOfDocTypeAndAreaOfVisibility = document.getElementsByClassName('selectionOfDocTypeAndAreaOfVisibility')[0]
+    var categories = selectionOfDocTypeAndAreaOfVisibility.getElementsByClassName('container')[0].getElementsByClassName('categories')[0].childNodes;
+    let bodyFormData = new FormData(categories[4]);
+
+    var arrInputFromForm = [];
+    for(var pair of bodyFormData) {
+        var pp = {};
+        pp[pair[0]] = pair[1];
+        arrInputFromForm.push(pp);
+    }
+
+    setPrevSelectedCategory(selectedCategory);
+    setInputFromForm(arrInputFromForm);
+
     setAttributes(attributes => [...attributes, {
       attrubuteFieldsKey: document.getElementById("attrubuteFieldsKey").value,
       attrubuteFieldsValue: document.getElementById("attrubuteFieldsValue").value
@@ -135,7 +144,6 @@ export default function DocumentUpload(props) {
             }
         }
       }
-
       bodyFormData.append("number", e.target[1].value)
 
       attributes.forEach(attr => {
@@ -193,6 +201,7 @@ export default function DocumentUpload(props) {
       var size = files[i].size;
       const exp = Math.floor(Math.log(size) / Math.log(k));
       var fileSize = parseFloat((size / Math.pow(k, exp)).toFixed(2))
+      loadFormInputDataAfterPerformingOtherOperations()
 
       if (fileSize <= 2048) { // 20 MB is limit for file upload
           setExtensionName(getExtension(files[i].name))
@@ -582,6 +591,22 @@ useEffect(() => {
     });
 }, []);
 
+function loadFormInputDataAfterPerformingOtherOperations() {
+    if((!prevSelectedCategory || prevSelectedCategory == selectedCategory) && inputFromForm.length > 0) {
+        var selectionOfDocTypeAndAreaOfVisibility = document.getElementsByClassName('selectionOfDocTypeAndAreaOfVisibility')[0];
+        var categories = selectionOfDocTypeAndAreaOfVisibility.getElementsByClassName('container')[0].getElementsByClassName('categories');
+        var containerFormContent = categories[0].getElementsByClassName('container-form-content')
+        for(var i=0;i<containerFormContent.length;i++) {
+            containerFormContent[i].getElementsByClassName('container-form-subcontent')[0].getElementsByTagName('input')[0].value = Object.values(inputFromForm[i]);
+        }
+    }
+}
+
+// Вызывается, когда выполняется подтверждение формы при добавлении атрибута
+useEffect(() => {
+    loadFormInputDataAfterPerformingOtherOperations()
+}, [inputFromForm]);
+
 const arr2 = [
     {
         "id": "400e49be-a639-11eb-bcbc-0242ac130002",
@@ -750,17 +775,22 @@ const arr2 = [
 
 // Тут строится форма для заполнения данных пользователем
 const FormObject = ({ recursive_objects }) => {
-    return (typeof Object.values(recursive_objects)[0] == 'object' ? Object.keys(recursive_objects).map(k => (
-        <div className="container-form-content">
-            {isNaN(k) && <h6>{k}:</h6>}<br />
-            <FormObject recursive_objects={recursive_objects[k]} />
-        </div>
-    )) : Object.keys(recursive_objects).map(k => (
-        <div className="container-form-subcontent">
-            {isNaN(k) && <h6>{k}:</h6>}
-            {isNaN(k) && recursive_objects[k] == 'required' ? <input type="text" name={k} required></input> : <input type="text" name={k}></input>}<br />
-        </div>
-    )));
+    return (typeof Object.values(recursive_objects)[0] == 'object' ? 
+        Object.keys(recursive_objects).map(k => (
+            <div className="container-form-content">
+                {isNaN(k) && <h6>{k}:</h6>}<br />
+                <FormObject recursive_objects={recursive_objects[k]} />
+            </div>
+        )) : Object.keys(recursive_objects).map(k => (
+            <div className="container-form-subcontent">
+                {isNaN(k) && <h6>{k}:</h6>}
+                {isNaN(k) && recursive_objects[k] == 'required' ? 
+                    <input type="text" name={k} id={k} required></input> : 
+                    <input type="text" name={k} id={k}></input>
+                }<br />
+            </div>
+        ))
+    );
 }
 
 // Вызывается, когда пользователь меняет опцию в списке и ставит текущую версию на 0 индекс
@@ -834,7 +864,6 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                   selectedFile &&
                   <div className="file-status-bar">
                       <div>
-                          {/* <div className="file-type-logo"></div> */}
                           <div className="file-type">({extensionName})</div>
                           <span className={`file-name ${selectedFile.invalid ? 'file-error' : ''}`}>{selectedFile.name}</span>
                           <span className="file-size">({fileSize(selectedFile.size)})</span> {selectedFile.invalid && <span className='file-error-message'>({errorMessage})</span>}
@@ -1058,7 +1087,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                 </div> : <h3>Отсутствуют категории</h3>}
           </div>
         </div>
-        <input id="documentUploadFormSubmit" style={{position: 'relative', top: 270}} type="submit" value="Submit" /><br />
+        <input id="documentUploadFormSubmit" style={{position: 'relative', top: 270}} type="submit" value="Подтвердить" /><br />
       </form>
       <div className="AttributesAppend">
         <h6>Добавление атрибутов</h6>
@@ -1089,6 +1118,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
         document.getElementById('category').getElementsByTagName('option')[0].selected = 'selected'
         setVersionsAndSelectedVersionDocStructure([])
         setAttributes([])
+        setInputFromForm([])
         modifyDocumentUploadFormSubmitStyleTop(true)
         uploadRef.current.innerHTML = '';
       }}>Сбросить настройки</button>
