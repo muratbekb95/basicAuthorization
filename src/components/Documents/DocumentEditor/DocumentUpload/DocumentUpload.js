@@ -598,10 +598,10 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                     sub_category.map(sc => {
                                         if(sc.id == e.target.value) {
                                             updateSelectedSubCategory(sc)
-                                            const d = Exec1(sc.id)
+                                            const subSubCategoryExec = Exec1(sc.id)
                                             var BreakException = {}
                                             try {
-                                                d.then(function (result) {
+                                                subSubCategoryExec.then(function (result) {
                                                     if (result.length > 0) {
                                                         result.splice(0, 0, {option: "Выбрать категорию 2"})
                                                         updateSubSubCategory(result)
@@ -609,6 +609,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                                         setVersions([])
                                                         setVersionDocStructure(null)
                                                     } else {
+                                                        updateSubSubCategory([])
                                                         updateSubSubCategoryFound(false)
                                                         setVersionsAndSelectedVersionDocStructure(sc)
                                                     }
@@ -626,7 +627,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                     selectedCategory !== undefined && (sc.parent_id == selectedCategory.id || sc.option != null)
                                     ? sc.option != null 
                                     ? <option value="unknown">Выбрать категорию 2</option>
-                                    : <option key={sc.id} value={sc.id}>{sc.doc_type}</option> 
+                                    : <option value={sc.id}>{sc.doc_type}</option> 
                                     : null
                                 ))}
                             </select> :
@@ -649,6 +650,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                             foundSubSubCategory = true;
                                             updateSelectedSubSubCategory(ssc)
                                             setVersionsAndSelectedVersionDocStructure(ssc)
+                                            // Убедись, что deepest_node в последнем блоке = true
                                         }
                                     })
                                     if(!foundSubSubCategory) {
@@ -662,7 +664,7 @@ function setVersionsAndSelectedVersionDocStructure(category) {
                                     selectedSubCategory !== undefined && (ssc.parent_id == selectedSubCategory.id || ssc.option != null)
                                     ? ssc.option != null 
                                     ? <option value="unknown">Выбрать категорию 3</option> 
-                                    : <option key={ssc.id} value={ssc.id}>{ssc.doc_type}</option> 
+                                    : <option value={ssc.id}>{ssc.doc_type}</option> 
                                     : null
                                 ))}
                             </select> :
